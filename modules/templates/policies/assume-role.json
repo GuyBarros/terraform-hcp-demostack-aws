@@ -1,0 +1,21 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "ec2.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    },
+     {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:sts::711129375688:assumed-role/se_demos_dev-developer/guy@hashicorp.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+
+}
