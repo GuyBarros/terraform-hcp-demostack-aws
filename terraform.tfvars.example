@@ -33,7 +33,12 @@ tertiary_region       = "ap-northeast-1"
 primary_namespace     = "EU-guystack"
 secondary_namespace   = "DE-guystack"
 tertiary_namespace    = "AP-guystack"
-instance_type_server  = "t2.medium"
 instance_type_worker  = "t2.medium"
 public_key            = "ssh-rsa AAAAB3NzaC1yc2E"
 host_access_ip        = ["300.74.72.8/32"]
+#####################
+#  HCP
+####################
+hcp_consul_cluster_id         = "hcp-demostack-consul-cluster"
+hcp_cluster_tier       = "development"
+hcp_hvn_id             = "guystack"

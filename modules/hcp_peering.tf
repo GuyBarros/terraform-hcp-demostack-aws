@@ -1,16 +1,20 @@
 // Pin the version
+/*
 terraform {
   required_providers {
     hcp = {
       source  = "hashicorp/hcp"
-      version = "~> 0.3"
+      version = "~> 0.4"
     }
   }
 }
+*/
 
-
-data "hcp_hvn" "guystack" {
-  hvn_id = "guystack"
+resource "hcp_hvn" "demostack" {
+  hvn_id         = var.hcp_hvn_id
+  cloud_provider = "aws"
+  region         = "eu-west-2"
+  cidr_block     = "172.25.16.0/20"
 }
 
 
@@ -19,7 +23,7 @@ resource "aws_vpc_peering_connection_accepter" "demostack" {
   auto_accept               = true
     tags = merge(local.common_tags ,{
    Purpose        = "demostack" ,
-   Function       = "worker" 
+   Function       = "hcp-peer" 
    Name            = "demostack-hcp-peer" ,
    }
   )
@@ -28,7 +32,7 @@ resource "aws_vpc_peering_connection_accepter" "demostack" {
 
 // Create a Network peering between the HVN and the AWS VPC
 resource "hcp_aws_network_peering" "demostack_peering" {
-  hvn_id              = data.hcp_hvn.guystack.hvn_id
+  hvn_id              = hcp_hvn.demostack.hvn_id
   peer_vpc_id         = aws_vpc.demostack.id
   peer_account_id     = aws_vpc.demostack.owner_id
   peer_vpc_region     = var.region

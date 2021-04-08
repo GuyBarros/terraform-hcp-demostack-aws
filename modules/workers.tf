@@ -5,7 +5,7 @@ data "template_file" "workers" {
     file("${path.module}/templates/shared/base.sh"),
     file("${path.module}/templates/shared/docker.sh"),
     file("${path.module}/templates/workers/consul.sh"),
-  //  file("${path.module}/templates/workers/vault.sh"),
+    file("${path.module}/templates/workers/vault.sh"),
   //  file("${path.module}/templates/workers/nomad.sh"),
   //  file("${path.module}/templates/workers/ebs_volumes.sh"),
   ))
@@ -25,17 +25,16 @@ data "template_file" "workers" {
     # HCP Consul
     hcp_config_file       = hcp_consul_cluster.hcp_demostack.consul_config_file
     hcp_ca_file           = hcp_consul_cluster.hcp_demostack.consul_ca_file
-    hcp_acl_token         = element(consul_acl_token.agent-token.*.id, count.index)
-    
+    hcp_acl_token         = element(data.consul_acl_token_secret_id.token.*.secret_id, count.index)
     consul_url            = var.consul_url
     consul_ent_url        = var.consul_ent_url
-    meta_zone_tag = "${var.namespace}-${count.index}"
+    
 
     # Vault
     vault_url        = var.vault_url
     vault_ent_url    = var.vault_ent_url
-    vault_root_token = random_id.vault-root-token.hex
-    vault_workers    = var.workers
+    VAULT_ADDR = hcp_vault_cluster.demostack.vault_public_endpoint_url
+    VAULT_TOKEN = hcp_vault_cluster_admin_token.root.token
 
     # Nomad
     nomad_url      = var.nomad_url
@@ -99,11 +98,11 @@ resource "aws_instance" "workers" {
 
   tags = merge(local.common_tags ,{
    Purpose        = "demostack" ,
-   Function       = "worker" 
+   Function       = "worker" ,
    Name            = "demostack-worker-${count.index}" ,
    }
   )
   
 
-  user_data = element(data.template_cloudinit_config.workers.*.rendered, count.index)
+  user_data_base64  = element(data.template_cloudinit_config.workers.*.rendered, count.index)
 }

@@ -31,6 +31,9 @@ output "hcp_consul_root_token"{
   value = hcp_consul_cluster.hcp_demostack.consul_root_token_secret_id
 }
 
+output "hcp_vault_root_token"{
+  value = hcp_vault_cluster_admin_token.root.token
+}
 
 /*
 output "eks_endpoint" {

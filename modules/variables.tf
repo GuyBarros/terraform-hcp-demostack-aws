@@ -185,3 +185,23 @@ variable "primary_datacenter" {
   description = "the primary datacenter for mesh gateways"
   default     = ""
 }
+
+variable "hcp_consul_cluster_id" {
+  description = "the HCP Consul Cluster ID that you  want to use"
+  default     = "hcp-demostack-consul-cluster"
+}
+
+variable "hcp_cluster_tier" {
+  description = "the HCP Consul Cluster tier that you  want to use"
+  default     = "development"
+}
+
+variable "hcp_hvn_id" {
+  description = "the Hashicorp Virtual Network id you want use"
+  default     = "guystack"
+}
+
+variable "hcp_vault_cluster_id" {
+  description = "the HCP Consul Cluster ID that you  want to use"
+  default     = "demostack"
+}

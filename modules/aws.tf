@@ -47,8 +47,14 @@ resource "aws_route" "internet_access" {
   route_table_id         = aws_vpc.demostack.main_route_table_id
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = aws_internet_gateway.demostack.id
-
 }
+
+resource "aws_route" "hcp_peering" {
+  route_table_id         = aws_vpc.demostack.main_route_table_id
+  destination_cidr_block = hcp_hvn.demostack.cidr_block
+  vpc_peering_connection_id = hcp_aws_network_peering.demostack_peering.provider_peering_id
+}
+
 
 data "aws_availability_zones" "available" {}
 
@@ -88,15 +94,22 @@ tags = local.common_tags
     }
   }
 
-#HCP
+########HCP
   ingress {
-    from_port   = 3000
-    to_port     = 30000
+    from_port   = 8301
+    to_port     = 8301
     protocol    = "tcp"
-    cidr_blocks = [data.hcp_hvn.guystack.cidr_block]
+    cidr_blocks = [hcp_hvn.demostack.cidr_block]
   }
 
+  ingress {
+    from_port   = 8301
+    to_port     = 8301
+    protocol    = "udp"
+    cidr_blocks = [hcp_hvn.demostack.cidr_block]
+  }
 
+########
   #HTTP
   ingress {
     from_port   = 80
@@ -183,6 +196,7 @@ tags = local.common_tags
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
   egress {
     from_port   = 0
     to_port     = 0
