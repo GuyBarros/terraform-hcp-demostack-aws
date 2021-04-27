@@ -7,9 +7,7 @@ output "Primary_Nomad" {
   value = module.primarycluster.nomad_ui
 }
 
-output "Primary_Vault" {
-  value = module.primarycluster.vault_ui
-}
+
 
 output "Primary_Fabio" {
   value = module.primarycluster.fabio_lb

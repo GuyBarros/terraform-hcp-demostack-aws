@@ -68,10 +68,8 @@ consul {
 }
 vault {
   enabled          = true
-  address          = "https://active.vault.service.consul:8200"
-  ca_file          = "/usr/local/share/ca-certificates/01-me.crt"
-  cert_file        = "/etc/ssl/certs/me.crt"
-  key_file         = "/etc/ssl/certs/me.key"
+  address          = "https://vault.service.consul:8200"
+  namespace        = "admin"
   create_from_role = "nomad-cluster"
 }
 autopilot {

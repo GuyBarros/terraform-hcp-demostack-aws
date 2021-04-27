@@ -109,6 +109,19 @@ tags = local.common_tags
     cidr_blocks = [hcp_hvn.demostack.cidr_block]
   }
 
+ingress {
+    from_port   = 8200
+    to_port     = 8200
+    protocol    = "tcp"
+    cidr_blocks = [hcp_hvn.demostack.cidr_block]
+  }
+
+  ingress {
+    from_port   = 8200
+    to_port     = 8200
+    protocol    = "udp"
+    cidr_blocks = [hcp_hvn.demostack.cidr_block]
+  }
 ########
   #HTTP
   ingress {

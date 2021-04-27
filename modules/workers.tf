@@ -6,8 +6,8 @@ data "template_file" "workers" {
     file("${path.module}/templates/shared/docker.sh"),
     file("${path.module}/templates/workers/consul.sh"),
     file("${path.module}/templates/workers/vault.sh"),
-  //  file("${path.module}/templates/workers/nomad.sh"),
-  //  file("${path.module}/templates/workers/ebs_volumes.sh"),
+    file("${path.module}/templates/workers/nomad.sh"),
+    file("${path.module}/templates/workers/ebs_volumes.sh"),
   ))
 
   vars = {
@@ -33,7 +33,7 @@ data "template_file" "workers" {
     # Vault
     vault_url        = var.vault_url
     vault_ent_url    = var.vault_ent_url
-    VAULT_ADDR = hcp_vault_cluster.demostack.vault_public_endpoint_url
+    VAULT_ADDR = "https://${hcp_vault_cluster.demostack.vault_private_endpoint_url}:8200"
     VAULT_TOKEN = hcp_vault_cluster_admin_token.root.token
 
     # Nomad

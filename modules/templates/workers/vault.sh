@@ -20,8 +20,9 @@ echo "--> Attempting to create nomad role"
 
   echo "--> Adding Nomad policy"
   echo "--> Retrieving root token..."
-  export VAULT_ADDR="${VAULT_ADDR}"
-  export VAULT_TOKEN="${VAULT_TOKEN}"
+  export VAULT_ADDR=${VAULT_ADDR}
+  vault login token=${VAULT_TOKEN}
+  export VAULT_NAMESPACE=admin
 
   vault policy write nomad-server - <<EOR
   path "auth/token/create/nomad-cluster" {
@@ -228,7 +229,7 @@ vault namespace create boundary
 
 echo "-->mount transit in boundary namespace"
 {
-vault secrets enable  -namespace=boundary -path=transit transit
+vault secrets enable  -namespace=admin/boundary -path=transit transit
  }||
 {
   echo "--> transit already mounted, moving on"
@@ -236,7 +237,7 @@ vault secrets enable  -namespace=boundary -path=transit transit
 
 echo "--> creating boundary root key"
 {
-vault  write -namespace=boundary -f  transit/keys/root
+vault  write -namespace=admin/boundary -f  transit/keys/root
  }||
 {
   echo "--> root key already exists, moving on"
@@ -244,7 +245,7 @@ vault  write -namespace=boundary -f  transit/keys/root
 
 echo "--> creating boundary worker-auth key"
 {
-vault write -namespace=boundary  -f  transit/keys/worker-auth
+vault write -namespace=admin/boundary  -f  transit/keys/worker-auth
  }||
 {
   echo "--> worker-auth key already exists, moving on"

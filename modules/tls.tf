@@ -1,9 +1,5 @@
 
-# Vault initial root token
-resource "random_id" "vault-root-token" {
-  byte_length = 8
-  prefix      = "${var.namespace}-"
-}
+
 
 # Client private key
 
@@ -29,27 +25,12 @@ resource "tls_cert_request" "workers" {
     "${var.namespace}-worker-${count.index}.node.consul",
     "${var.namespace}-worker-${count.index}.node.${var.region}.consul",
 
-    "*.service.consul",
-    "*.service.${var.region}.consul",
-    "*.query.consul",
-    "consul.service.consul",
-
     # Nomad
     "nomad.service.consul",
     "nomad.service.${var.region}.consul",
 
     "client.global.nomad",
     "server.global.nomad",
-
-    # Vault
-    "vault.service.consul",
-    "vault.query.consul",
-    "active.vault.service.consul",
-    "active.vault.service.${var.region}.consul",
-    "standby.vault.service.consul",
-    "standby.vault.service.${var.region}.consul",
-    "performance-standby.vault.service.consul",
-    "performance-standby.vault.service.${var.region}.consul",
 
     # Common
     "localhost",

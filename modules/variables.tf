@@ -12,10 +12,7 @@ locals {
     purpose        = "SE Demostack"
   }
 }
-variable "vault_oracle_client_url" {
-  description = "The url to download vault."
-  default     = "https://releases.hashicorp.com/vault-plugin-database-oracle/0.2.1/vault-plugin-database-oracle_0.2.1_linux_amd64.zip"
-}
+
 
 variable "region" {
   description = "The region to create resources."

@@ -14,9 +14,6 @@ output "fabio_lb" {
   value = "http://${aws_route53_record.fabio.fqdn}:9999"
 }
 
-output "vault_ui" {
-  value = "https://${aws_route53_record.vault.fqdn}:8200"
-}
 
 output "nomad_ui" {
   value = "https://${aws_route53_record.nomad.fqdn}:4646"

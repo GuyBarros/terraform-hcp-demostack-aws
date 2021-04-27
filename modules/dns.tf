@@ -40,16 +40,6 @@ resource "aws_route53_record" "nomad" {
 
   
 }
-resource "aws_route53_record" "vault" {
-  zone_id = var.zone_id
-  name    = "vault.${var.namespace}"
-  // name    = "vault"
-  type    = "CNAME"
-  records = [aws_alb.vault.dns_name]
-  ttl     = "300"
-
-  
-}
 
 
 

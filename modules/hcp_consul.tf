@@ -37,12 +37,22 @@ data "consul_acl_token_secret_id" "token" {
 }
 
 
-
 resource "consul_service" "vault" {
   name    = "vault"
   node    = consul_node.vault.name
   port    = 8200
   tags    = ["hcp","vault"]
+  check {
+    check_id                          = "vault_health_check"
+    name                              = "hcp vault health check"
+    status                            = "passing"
+    http                              = "${hcp_vault_cluster.demostack.vault_private_endpoint_url}/v1/sys/health"
+    method                            = "GET"
+    interval                          = "15s"
+    timeout                           = "10s"
+    deregister_critical_service_after = "30s"
+
+  }
 }
 
 resource "consul_node" "vault" {
@@ -50,8 +60,5 @@ resource "consul_node" "vault" {
     hcp_vault_cluster.demostack
   ]
   name    = "compute-vault"
-  # address = hcp_vault_cluster.demostack.vault_public_endpoint_url
-  # address = substr(hcp_vault_cluster.demostack.vault_public_endpoint_url, 5, length)
-  address = replace(hcp_vault_cluster.demostack.vault_public_endpoint_url, ":8200", "")
-
+  address = replace(hcp_vault_cluster.demostack.vault_private_endpoint_url, ":8200", "")
 }
