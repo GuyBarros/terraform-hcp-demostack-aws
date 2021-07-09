@@ -4,8 +4,6 @@ resource "aws_lb" "boundary-controller" {
   load_balancer_type = "network"
   internal           = false
 subnets         = aws_subnet.demostack.*.id
-
-  tags = local.common_tags
 }
 
 resource "aws_lb_target_group" "boundary-controller" {
@@ -15,10 +13,10 @@ resource "aws_lb_target_group" "boundary-controller" {
   vpc_id   = aws_vpc.demostack.id
 
   stickiness  {
-    enabled = false
-     type    = "lb_cookie"
+    enabled = true
+     type   = "source_ip"
   }
-   tags = local.common_tags
+
 }
 
 resource "aws_lb_target_group_attachment" "boundary-controller" {

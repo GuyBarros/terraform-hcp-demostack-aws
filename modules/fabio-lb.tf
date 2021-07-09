@@ -4,7 +4,6 @@ resource "aws_alb" "fabio" {
   security_groups = [aws_security_group.demostack.id]
   subnets         = aws_subnet.demostack.*.id
 
-   tags = local.common_tags
 }
 
 resource "aws_alb_target_group" "fabio" {
@@ -12,7 +11,6 @@ resource "aws_alb_target_group" "fabio" {
   port     = "9999"
   vpc_id   = aws_vpc.demostack.id
   protocol = "HTTP"
-  tags = local.common_tags
 
   health_check {
     interval          = "5"
@@ -30,7 +28,6 @@ resource "aws_alb_target_group" "fabio-ui" {
   port     = "9998"
   vpc_id   = aws_vpc.demostack.id
   protocol = "HTTP"
-  tags = local.common_tags
 
   health_check {
     interval          = "5"
@@ -45,7 +42,7 @@ resource "aws_alb_target_group" "fabio-ui" {
 
 resource "aws_alb_listener" "fabio" {
   load_balancer_arn = aws_alb.fabio.arn
-  
+
   port     = "9999"
   protocol = "HTTP"
 
@@ -71,7 +68,7 @@ resource "aws_alb_target_group_attachment" "fabio" {
   target_group_arn = aws_alb_target_group.fabio.arn
   target_id        = element(aws_instance.workers.*.id, count.index)
   port             = "9999"
-  
+
 }
 
 resource "aws_alb_target_group_attachment" "fabio-ui" {
@@ -79,5 +76,5 @@ resource "aws_alb_target_group_attachment" "fabio-ui" {
   target_group_arn = aws_alb_target_group.fabio-ui.arn
   target_id        = element(aws_instance.workers.*.id, count.index)
   port             = "9998"
-  
+
 }

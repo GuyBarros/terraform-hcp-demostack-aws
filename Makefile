@@ -1,7 +1,7 @@
 all: demostack dns
 .PHONY: all doormat_creds doormat_aws deploy destroy console
 TFC_ORG = emea-se-playground-2019
-WORKSPACE_DEMOSTACK = Guy-AWS-Demostack
+WORKSPACE_DEMOSTACK = GUY-HCP-Demostack-AWS
 WORKSPACE_DNS = Guy-DNS-Zone
 check_creds = $(shell doormat --smoke-test 1>&2 2>/dev/null; echo $$?)
 doormat_creds:

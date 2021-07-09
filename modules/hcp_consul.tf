@@ -8,7 +8,7 @@ resource "hcp_consul_cluster" "hcp_demostack" {
 }
 
 provider "consul" {
-  address    = "https://${hcp_consul_cluster.hcp_demostack.consul_public_endpoint_url }"
+  address    = hcp_consul_cluster.hcp_demostack.consul_public_endpoint_url
   datacenter =  hcp_consul_cluster.hcp_demostack.datacenter
   token      =  hcp_consul_cluster.hcp_demostack.consul_root_token_secret_id
 
@@ -25,6 +25,7 @@ resource "consul_acl_policy" "agent" {
 }
 
 resource "consul_acl_token" "agent-token" {
+  depends_on = [hcp_consul_cluster.hcp_demostack,hcp_vault_cluster.hcp_demostack]
   count = var.workers
   description = "TF created agent token"
   policies = [consul_acl_policy.agent.name]
@@ -36,8 +37,16 @@ data "consul_acl_token_secret_id" "token" {
     accessor_id =  element(consul_acl_token.agent-token.*.id, count.index)
 }
 
+resource "random_pet" "animal" {
+  depends_on = [hcp_consul_cluster.hcp_demostack,hcp_vault_cluster.hcp_demostack]
+      length    = 1
+      prefix    = hcp_consul_cluster.hcp_demostack.consul_root_token_secret_id
+      separator = "-"
+    }
+
 
 resource "consul_service" "vault" {
+  depends_on = [hcp_consul_cluster.hcp_demostack,hcp_vault_cluster.hcp_demostack]
   name    = "vault"
   node    = consul_node.vault.name
   port    = 8200
@@ -46,7 +55,7 @@ resource "consul_service" "vault" {
     check_id                          = "vault_health_check"
     name                              = "hcp vault health check"
     status                            = "passing"
-    http                              = "${hcp_vault_cluster.demostack.vault_private_endpoint_url}/v1/sys/health"
+    http                              = "${hcp_vault_cluster.hcp_demostack.vault_private_endpoint_url}/v1/sys/health"
     method                            = "GET"
     interval                          = "15s"
     timeout                           = "10s"
@@ -55,10 +64,10 @@ resource "consul_service" "vault" {
   }
 }
 
+
 resource "consul_node" "vault" {
-  depends_on = [
-    hcp_vault_cluster.demostack
-  ]
+  depends_on = [hcp_consul_cluster.hcp_demostack,hcp_vault_cluster.hcp_demostack]
   name    = "compute-vault"
-  address = replace(hcp_vault_cluster.demostack.vault_private_endpoint_url, ":8200", "")
+  # address = hcp_vault_cluster.hcp_demostack.vault_public_endpoint_url
+ address = replace(hcp_vault_cluster.hcp_demostack.vault_private_endpoint_url, ":8200", "")
 }

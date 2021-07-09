@@ -1,14 +1,14 @@
 data "template_file" "workers" {
   count = var.workers
 
-  template = join("\n", list(
+  template = join("\n", tolist([
     file("${path.module}/templates/shared/base.sh"),
     file("${path.module}/templates/shared/docker.sh"),
     file("${path.module}/templates/workers/consul.sh"),
     file("${path.module}/templates/workers/vault.sh"),
     file("${path.module}/templates/workers/nomad.sh"),
     file("${path.module}/templates/workers/ebs_volumes.sh"),
-  ))
+  ]))
 
   vars = {
     namespace  = var.namespace
@@ -28,12 +28,12 @@ data "template_file" "workers" {
     hcp_acl_token         = element(data.consul_acl_token_secret_id.token.*.secret_id, count.index)
     consul_url            = var.consul_url
     consul_ent_url        = var.consul_ent_url
-    
+
 
     # Vault
     vault_url        = var.vault_url
     vault_ent_url    = var.vault_ent_url
-    VAULT_ADDR = "https://${hcp_vault_cluster.demostack.vault_private_endpoint_url}:8200"
+    VAULT_ADDR = "${hcp_vault_cluster.hcp_demostack.vault_private_endpoint_url}"
     VAULT_TOKEN = hcp_vault_cluster_admin_token.root.token
 
     # Nomad
@@ -52,8 +52,8 @@ data "template_file" "workers" {
     aws_ebs_volume_mongodb_id = aws_ebs_volume.mongodb.id
     aws_ebs_volume_prometheus_id = aws_ebs_volume.prometheus.id
     aws_ebs_volume_shared_id = aws_ebs_volume.shared.id
-    
- 
+
+
   }
 }
 
@@ -102,7 +102,7 @@ resource "aws_instance" "workers" {
    Name            = "demostack-worker-${count.index}" ,
    }
   )
-  
+
 
   user_data_base64  = element(data.template_cloudinit_config.workers.*.rendered, count.index)
 }

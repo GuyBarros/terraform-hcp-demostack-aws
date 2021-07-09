@@ -23,21 +23,3 @@ output "boundary_ui" {
  value = "http://${aws_route53_record.boundary.fqdn}:9200"
  # value = "troubleshooting"
 }
-
-output "hcp_consul_root_token"{
-  value = hcp_consul_cluster.hcp_demostack.consul_root_token_secret_id
-}
-
-output "hcp_vault_root_token"{
-  value = hcp_vault_cluster_admin_token.root.token
-}
-
-/*
-output "eks_endpoint" {
-  value = aws_eks_cluster.eks.endpoint
-}
-output "eks_ca" {
- // value = aws_eks_cluster.eks.endpoint
-  value = aws_eks_cluster.eks.certificate_authority.0.data
-}
-*/

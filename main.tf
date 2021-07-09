@@ -6,7 +6,7 @@ terraform {
     hostname     = "app.terraform.io"
     organization = "emea-se-playground-2019"
     workspaces {
-      name = "Guy-AWS-Demostack"
+      name = "GUY-HCP-Demostack-AWS"
     }
   }
 }
@@ -36,40 +36,20 @@ data "terraform_remote_state" "dns" {
 }
 //--------------------------------------------------------------------
 
-provider "aws" {
-  region  = var.primary_region
-  alias   = "primary"
-  version = "~> 2.0"
-}
-
-provider "aws" {
-  region  = var.secondary_region
-  alias   = "secondary"
-  version = "~> 2.0"
-}
-
-provider "aws" {
-  region  = var.tertiary_region
-  alias   = "tertiary"
-  version = "~> 2.0"
-}
 
 provider "consul" {
-  alias   = "primary"
-}
 
+ alias   = "consul_terraprimary"
+}
 
 // Configure the provider
 provider "hcp" {
-  
+
 }
 
 
 module "primarycluster" {
-  providers = {
-    aws.demostack = aws.primary
-    aws           = aws.primary
-  }
+
   source               = "./modules"
   # count   = var.create_primary_cluster ? 1 : 0
   owner                = var.owner

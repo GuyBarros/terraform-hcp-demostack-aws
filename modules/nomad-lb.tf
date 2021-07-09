@@ -4,12 +4,11 @@ resource "aws_alb" "nomad" {
   security_groups = [aws_security_group.demostack.id]
   subnets         = aws_subnet.demostack.*.id
 
-   tags = local.common_tags
 }
 
 resource "aws_alb_target_group" "nomad" {
   name = "${var.namespace}-nomad"
- 
+
   port     = "4646"
   vpc_id   = aws_vpc.demostack.id
   protocol = "HTTPS"
@@ -31,7 +30,7 @@ resource "aws_alb_listener" "nomad" {
   ]
 
   load_balancer_arn = aws_alb.nomad.arn
-  
+
   port            = "4646"
   protocol        = "HTTPS"
   certificate_arn = aws_acm_certificate_validation.cert.certificate_arn
@@ -48,5 +47,5 @@ resource "aws_alb_target_group_attachment" "nomad" {
   target_group_arn = aws_alb_target_group.nomad.arn
   target_id        = element(aws_instance.workers.*.id, count.index)
   port             = "4646"
-  
+
 }

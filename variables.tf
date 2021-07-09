@@ -10,6 +10,7 @@ locals {
 
 variable "host_access_ip" {
   description = "your IP address to allow ssh to work"
+  type = list(string)
   default     = []
 }
 
@@ -244,4 +245,19 @@ variable "hcp_hvn_id" {
 variable "hcp_vault_cluster_id" {
   description = "the HCP Consul Cluster ID that you  want to use"
   default     = "demostack"
+}
+
+variable "hcp_consul_address" {
+  description = "update before destroy"
+  default     = ""
+}
+
+variable "hcp_consul_datacenter" {
+  description = "update before destroy"
+  default     = ""
+}
+
+variable "hcp_consul_token" {
+  description = "update before destroy"
+  default     = ""
 }
