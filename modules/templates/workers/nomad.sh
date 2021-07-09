@@ -38,6 +38,11 @@ advertise {
   rpc  = "$(public_ip):4647"
   serf = "$(public_ip):4648"
 }
+server {
+  enabled          = true
+  bootstrap_expect = ${nomad_workers}
+  encrypt          = "${nomad_gossip_key}"
+}
 client {
   enabled = true
    options {
@@ -73,7 +78,6 @@ vault {
   create_from_role = "nomad-cluster"
 }
 autopilot {
-    cleanup_dead_workers = true
     last_contact_threshold = "200ms"
     max_trailing_logs = 250
     server_stabilization_time = "10s"
@@ -114,7 +118,10 @@ ExecReload=/bin/kill -HUP $MAINPID
 KillSignal=SIGINT
 Restart=on-failure
 LimitNOFILE=65536
-
+#Enterprise License
+Environment=NOMAD_LICENSE=${nomadlicense}
+Environment=VAULT_TOKEN=${VAULT_TOKEN}
+Enviroment=CONSUL_TOKEN=${hcp_acl_token}
 [Install]
 WantedBy=multi-user.target
 EOF

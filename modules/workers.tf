@@ -37,10 +37,13 @@ data "template_file" "workers" {
     VAULT_TOKEN = hcp_vault_cluster_admin_token.root.token
 
     # Nomad
+    nomad_workers  = var.workers
+    nomad_gossip_key = var.nomad_gossip_key
     nomad_url      = var.nomad_url
     nomad_ent_url  = var.nomad_ent_url
     cni_plugin_url = var.cni_plugin_url
     run_nomad_jobs = var.run_nomad_jobs
+    nomadlicense     = var.nomadlicense
 
     # Nomad EBS Volumes
     index      = count.index+1

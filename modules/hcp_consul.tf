@@ -21,6 +21,13 @@ resource "consul_acl_policy" "agent" {
     node_prefix "" {
       policy = "write"
     }
+    service_prefix "" {
+      policy = "write"
+    }
+    key_prefix "" {
+      policy = "write"
+    }
+
     RULE
 }
 

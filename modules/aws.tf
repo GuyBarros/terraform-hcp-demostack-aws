@@ -45,13 +45,13 @@ resource "aws_route" "internet_access" {
   gateway_id             = aws_internet_gateway.demostack.id
 }
 
-/*
+
 resource "aws_route" "hcp_peering" {
   route_table_id         = aws_vpc.demostack.main_route_table_id
   destination_cidr_block = hcp_hvn.demostack.cidr_block
   vpc_peering_connection_id = hcp_aws_network_peering.demostack_peering.provider_peering_id
 }
-*/
+
 
 data "aws_availability_zones" "available" {}
 

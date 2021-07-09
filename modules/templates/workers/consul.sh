@@ -71,6 +71,7 @@ ExecStart=/usr/local/bin/consul agent -config-dir="/etc/consul.d"
 ExecReload=/bin/kill -HUP $MAINPID
 KillSignal=SIGINT
 
+Enviroment=CONSUL_TOKEN=${hcp_acl_token}
 [Install]
 WantedBy=multi-user.target
 EOF
