@@ -1,9 +1,3 @@
-terraform {
-  required_version = ">= 0.11.0"
-
-}
-
-
 //Getting the Domaing name
 data "aws_route53_zone" "fdqn" {
   zone_id = var.zone_id
@@ -13,10 +7,10 @@ data "aws_route53_zone" "fdqn" {
 data "aws_ami" "ubuntu" {
   most_recent = true
 
-# ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*
-#ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-*
+  # ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*
+  #ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-*
   filter {
-    name   = "name"
+    name = "name"
     # values = ["ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-*"]
     values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
   }
@@ -32,6 +26,9 @@ data "aws_ami" "ubuntu" {
 resource "aws_vpc" "demostack" {
   cidr_block           = var.vpc_cidr_block
   enable_dns_hostnames = true
+  tags = {
+    Name = var.namespace
+  }
 }
 
 
@@ -61,6 +58,9 @@ resource "aws_subnet" "demostack" {
   availability_zone       = data.aws_availability_zones.available.names[count.index]
   cidr_block              = var.cidr_blocks[count.index]
   map_public_ip_on_launch = true
+  tags = {
+    Name = "${var.namespace}-${count.index}"
+  }
 }
 
 
@@ -68,13 +68,11 @@ resource "aws_subnet" "demostack" {
 resource "aws_security_group" "demostack" {
   name_prefix = var.namespace
   vpc_id      = aws_vpc.demostack.id
-
-tags = local.common_tags
   #Allow internal communication between nodes
   ingress {
-    from_port   = -1
-    to_port     = -1
-    protocol    = -1
+    from_port = -1
+    to_port   = -1
+    protocol  = -1
   }
 
 
@@ -89,7 +87,7 @@ tags = local.common_tags
     }
   }
 
-########HCP
+  ######## HCP
   ingress {
     from_port   = 8301
     to_port     = 8301
@@ -104,7 +102,7 @@ tags = local.common_tags
     cidr_blocks = [hcp_hvn.demostack.cidr_block]
   }
 
-ingress {
+  ingress {
     from_port   = 8200
     to_port     = 8200
     protocol    = "tcp"
@@ -119,7 +117,7 @@ ingress {
   }
 
 
-ingress {
+  ingress {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
@@ -134,7 +132,7 @@ ingress {
   }
 
 
-ingress {
+  ingress {
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
@@ -147,7 +145,7 @@ ingress {
     protocol    = "udp"
     cidr_blocks = [hcp_hvn.demostack.cidr_block]
   }
-########
+  ########
   #HTTP
   ingress {
     from_port   = 80
@@ -173,7 +171,7 @@ ingress {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-#Grafana
+  #Grafana
   ingress {
     from_port   = 1521
     to_port     = 1521
