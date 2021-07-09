@@ -23,18 +23,18 @@ data "template_file" "workers" {
     public_key = var.public_key
 
     # HCP Consul
-    hcp_config_file       = hcp_consul_cluster.hcp_demostack.consul_config_file
-    hcp_ca_file           = hcp_consul_cluster.hcp_demostack.consul_ca_file
-    hcp_acl_token         = element(data.consul_acl_token_secret_id.token.*.secret_id, count.index)
-    consul_url            = var.consul_url
-    consul_ent_url        = var.consul_ent_url
+    hcp_config_file = hcp_consul_cluster.hcp_demostack.consul_config_file
+    hcp_ca_file     = hcp_consul_cluster.hcp_demostack.consul_ca_file
+    hcp_acl_token   = element(data.consul_acl_token_secret_id.token.*.secret_id, count.index)
+    consul_url      = var.consul_url
+    consul_ent_url  = var.consul_ent_url
 
 
     # Vault
-    vault_url        = var.vault_url
-    vault_ent_url    = var.vault_ent_url
-    VAULT_ADDR = "${hcp_vault_cluster.hcp_demostack.vault_private_endpoint_url}"
-    VAULT_TOKEN = hcp_vault_cluster_admin_token.root.token
+    vault_url     = var.vault_url
+    vault_ent_url = var.vault_ent_url
+    VAULT_ADDR    = "${hcp_vault_cluster.hcp_demostack.vault_private_endpoint_url}"
+    VAULT_TOKEN   = hcp_vault_cluster_admin_token.root.token
 
     # Nomad
     nomad_workers  = var.workers
@@ -46,15 +46,15 @@ data "template_file" "workers" {
     nomadlicense     = var.nomadlicense
 
     # Nomad EBS Volumes
-    index      = count.index+1
-    count      = var.workers
-    dc1       = data.aws_availability_zones.available.names[0]
-    dc2       = data.aws_availability_zones.available.names[1]
-    dc3       = data.aws_availability_zones.available.names[2]
-    aws_ebs_volume_mysql_id = aws_ebs_volume.shared.id
-    aws_ebs_volume_mongodb_id = aws_ebs_volume.mongodb.id
+    index                        = count.index + 1
+    count                        = var.workers
+    dc1                          = data.aws_availability_zones.available.names[0]
+    dc2                          = data.aws_availability_zones.available.names[1]
+    dc3                          = data.aws_availability_zones.available.names[2]
+    aws_ebs_volume_mysql_id      = aws_ebs_volume.shared.id
+    aws_ebs_volume_mongodb_id    = aws_ebs_volume.mongodb.id
     aws_ebs_volume_prometheus_id = aws_ebs_volume.prometheus.id
-    aws_ebs_volume_shared_id = aws_ebs_volume.shared.id
+    aws_ebs_volume_shared_id     = aws_ebs_volume.shared.id
 
 
   }
@@ -99,13 +99,13 @@ resource "aws_instance" "workers" {
     delete_on_termination = "true"
   }
 
-  tags = merge(local.common_tags ,{
-   Purpose        = "demostack" ,
-   Function       = "worker" ,
-   Name            = "demostack-worker-${count.index}" ,
-   }
+  tags = merge(local.common_tags, {
+    Purpose  = "demostack",
+    Function = "worker",
+    Name     = "demostack-worker-${count.index}",
+    }
   )
 
 
-  user_data_base64  = element(data.template_cloudinit_config.workers.*.rendered, count.index)
+  user_data_base64 = element(data.template_cloudinit_config.workers.*.rendered, count.index)
 }

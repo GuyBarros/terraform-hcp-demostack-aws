@@ -1,7 +1,7 @@
 
 resource "hcp_vault_cluster" "hcp_demostack" {
-  cluster_id = var.hcp_vault_cluster_id
-  hvn_id     = hcp_hvn.demostack.hvn_id
+  cluster_id      = "${var.namespace}-vault"
+  hvn_id          = hcp_hvn.demostack.hvn_id
   public_endpoint = true
 }
 

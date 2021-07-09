@@ -2,11 +2,11 @@
 locals {
   # Common tags to be assigned to all resources
   common_tags = {
-    name            = var.namespace
-    owner           = var.owner
-    created-by      = var.created-by
-    sleep-at-night  = var.sleep-at-night
-    ttl             = var.TTL
+    name           = var.namespace
+    owner          = var.owner
+    created-by     = var.created-by
+    sleep-at-night = var.sleep-at-night
+    ttl            = var.TTL
     se-region      = var.region
     terraform      = true
     purpose        = "SE Demostack"
@@ -78,7 +78,7 @@ variable "owner" {
 
 variable "hashi_region" {
   description = "the region the owner belongs in.  e.g. NA-WEST-ENT, EU-CENTRAL"
-  default = "EMEA"
+  default     = "EMEA"
 }
 
 variable "created-by" {
@@ -175,18 +175,8 @@ variable "run_nomad_jobs" {
 
 variable "host_access_ip" {
   description = "CIDR blocks allowed to connect via SSH on port 22"
-  type = list(string)
+  type        = list(string)
   default     = []
-}
-
-variable "primary_datacenter" {
-  description = "the primary datacenter for mesh gateways"
-  default     = ""
-}
-
-variable "hcp_consul_cluster_id" {
-  description = "the HCP Consul Cluster ID that you  want to use"
-  default     = "hcp-demostack-consul-cluster"
 }
 
 variable "hcp_cluster_tier" {
@@ -196,10 +186,5 @@ variable "hcp_cluster_tier" {
 
 variable "hcp_hvn_id" {
   description = "the Hashicorp Virtual Network id you want use"
-  default     = "guystack"
-}
-
-variable "hcp_vault_cluster_id" {
-  description = "the HCP Consul Cluster ID that you  want to use"
-  default     = "demostack"
+  default     = "ricstack"
 }

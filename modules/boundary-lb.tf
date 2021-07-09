@@ -1,9 +1,9 @@
 
 resource "aws_lb" "boundary-controller" {
-   name = "${var.namespace}-boundary-controller"
+  name               = "${var.namespace}-boundary-controller"
   load_balancer_type = "network"
   internal           = false
-subnets         = aws_subnet.demostack.*.id
+  subnets            = aws_subnet.demostack.*.id
 }
 
 resource "aws_lb_target_group" "boundary-controller" {
@@ -12,9 +12,9 @@ resource "aws_lb_target_group" "boundary-controller" {
   protocol = "TCP"
   vpc_id   = aws_vpc.demostack.id
 
-  stickiness  {
+  stickiness {
     enabled = true
-     type   = "source_ip"
+    type    = "source_ip"
   }
 
 }

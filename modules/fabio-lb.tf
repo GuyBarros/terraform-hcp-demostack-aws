@@ -54,8 +54,8 @@ resource "aws_alb_listener" "fabio" {
 
 resource "aws_alb_listener" "fabio-ui" {
   load_balancer_arn = aws_alb.fabio.arn
-  port     = "9998"
-  protocol = "HTTP"
+  port              = "9998"
+  protocol          = "HTTP"
 
   default_action {
     target_group_arn = aws_alb_target_group.fabio-ui.arn
