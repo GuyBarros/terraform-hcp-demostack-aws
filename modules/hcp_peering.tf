@@ -1,15 +1,3 @@
-// Pin the version
-/*
-terraform {
-  required_providers {
-    hcp = {
-      source  = "hashicorp/hcp"
-      version = "~> 0.4"
-    }
-  }
-}
-*/
-
 resource "hcp_hvn" "demostack" {
   hvn_id         = var.hcp_hvn_id
   cloud_provider = "aws"

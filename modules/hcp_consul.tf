@@ -11,7 +11,6 @@ provider "consul" {
   address    = hcp_consul_cluster.hcp_demostack.consul_public_endpoint_url
   datacenter = hcp_consul_cluster.hcp_demostack.datacenter
   token      = hcp_consul_cluster.hcp_demostack.consul_root_token_secret_id
-
 }
 
 resource "consul_acl_policy" "agent" {
