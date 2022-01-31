@@ -186,5 +186,5 @@ variable "hcp_cluster_tier" {
 
 variable "hcp_hvn_id" {
   description = "the Hashicorp Virtual Network id you want use"
-  default     = "ricstack"
+  default     = "demostack"
 }

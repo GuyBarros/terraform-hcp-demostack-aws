@@ -1,17 +1,6 @@
 #!/usr/bin/env bash
 echo "==> Nomad (client)"
 
-echo "--> Fetching"
-echo "==> Nomad (server)"
-if [ ${enterprise} == 0 ]
-then
-echo "--> Fetching OSS binaries"
-install_from_url "nomad" "${nomad_url}"
-else
-echo "--> Fetching enterprise binaries"
-install_from_url "nomad" "${nomad_ent_url}"
-fi
-
 
 echo "--> Installing CNI plugin"
 sudo mkdir -p /opt/cni/bin/
@@ -20,6 +9,15 @@ sudo tar -xzf cni.tgz -C /opt/cni/bin/
 
 export AWS_REGION=$(curl -fsq http://169.254.169.254/latest/meta-data/placement/availability-zone |  sed 's/[a-z]$//')
 export AWS_AZ=$(curl http://169.254.169.254/latest/meta-data/placement/availability-zone)
+
+
+echo "--> Writing configuration"
+sudo mkdir -p /mnt/nomad
+sudo mkdir -p /etc/nomad.d
+
+echo "--> clean up any default config."
+sudo rm  /etc/nomad.d/*
+
 
 echo "--> Installing"
 sudo mkdir -p /mnt/nomad

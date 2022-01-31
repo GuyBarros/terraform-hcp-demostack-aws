@@ -1,40 +1,3 @@
-//--------------------------EMEA-SE_PLAYGROUND-2019-----------------------------------------
-# Using a single workspace:
-
-terraform {
-  backend "remote" {
-    hostname     = "app.terraform.io"
-    organization = "emea-se-playground-2019"
-    workspaces {
-      name = "GUY-HCP-Demostack-AWS"
-    }
-  }
-}
-
-// Workspace Data
-data "terraform_remote_state" "tls" {
-  backend = "remote"
-  config = {
-    hostname     = "app.terraform.io"
-    organization = "emea-se-playground-2019"
-    workspaces = {
-      name = "tls-root-certificate"
-    }
-  } //config
-}
-
-data "terraform_remote_state" "dns" {
-  backend = "remote"
-
-  config = {
-    hostname     = "app.terraform.io"
-    organization = "emea-se-playground-2019"
-    workspaces = {
-      name = "Guy-DNS-Zone"
-    }
-  } //network
-}
-//--------------------------------------------------------------------
 
 
 provider "consul" {
@@ -78,7 +41,7 @@ module "primarycluster" {
   zone_id              = data.terraform_remote_state.dns.outputs.aws_sub_zone_id
   run_nomad_jobs       = var.run_nomad_jobs
   host_access_ip       = var.host_access_ip
-  primary_datacenter   = var.primary_namespace
+
 
   # EMEA-SE-PLAYGROUND
   ca_key_algorithm      = data.terraform_remote_state.tls.outputs.ca_key_algorithm

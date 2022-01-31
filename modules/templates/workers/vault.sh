@@ -5,16 +5,6 @@ echo "==> Vault (server)"
 echo "==> checking if we are using enterprise binaries"
 echo "==> value of enterprise is ${enterprise}"
 
-if [ ${enterprise} == 0 ]
-then
-echo "--> Fetching Vault OSS"
-install_from_url "vault" "${vault_url}"
-
-else
-echo "--> Fetching Vault Ent"
-install_from_url "vault" "${vault_ent_url}"
-fi
-
 
 echo "--> Attempting to create nomad role"
 
@@ -192,7 +182,7 @@ echo "--> Setting up Github auth"
    echo "--> github auth mounted, moving on"
  }
 
- 
+
  echo "-->Enabling transform"
  {
 vault secrets enable  -path=/data-protection/masking/transform transform

@@ -60,6 +60,10 @@ net.bridge.bridge-nf-call-ip6tables = 1
 net.bridge.bridge-nf-call-iptables = 1
 EOF
 
+echo "--> Adding Hashicorp repo"
+curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+ sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+
 echo "--> updated version of Nodejs"
 curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
 
@@ -110,6 +114,23 @@ $(private_ip)  ${node_name}
 EOF
 
 
+
+if [ ${enterprise} == 0 ]
+then
+apt-get install -y \
+  vault \
+  consul \
+  nomad  \
+  &>/dev/null
+
+else
+apt-get install -y \
+vault-enterprise \
+  consul-enterprise \
+  nomad-enterprise  \
+  &>/dev/null
+
+fi
 
 # echo "--> Installing dnsmasq"
 # sudo apt-get install -y -q dnsmasq

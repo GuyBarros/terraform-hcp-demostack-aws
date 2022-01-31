@@ -222,10 +222,7 @@ variable "run_nomad_jobs" {
   default = "0"
 }
 
-variable "primary_datacenter" {
-  description = "the primary datacenter for mesh gateways"
-  default     = ""
-}
+
 
 variable "hcp_consul_cluster_id" {
   description = "the HCP Consul Cluster ID that you  want to use"

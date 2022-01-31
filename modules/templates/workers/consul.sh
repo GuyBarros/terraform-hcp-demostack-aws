@@ -1,15 +1,5 @@
 #!/usr/bin/env bash
-echo "==> Consul (client)"
 
-echo "==> Consul (server)"
-if [ ${enterprise} == 0 ]
-then
-echo "--> Fetching OSS binaries"
-install_from_url "consul" "${consul_url}"
-else
-echo "--> Fetching enterprise binaries"
-install_from_url "consul" "${consul_ent_url}"
-fi
 
 echo "--> Writing configuration"
 sudo mkdir -p /mnt/consul
