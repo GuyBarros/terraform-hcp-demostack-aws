@@ -6,6 +6,9 @@ sudo mkdir -p /mnt/consul
 sudo mkdir -p /etc/consul.d
 echo ${hcp_ca_file} | base64 --decode > /etc/consul.d/ca.pem
 echo ${hcp_config_file}| base64 --decode > /etc/consul.d/config.json
+
+sed -i 's/.\/ca.pem/\/etc\/consul.d\/ca.pem/' /etc/consul.d/config.json
+
 sudo tee /etc/consul.d/client_acl.json > /dev/null <<EOF
 {
   "acl": {
@@ -55,16 +58,17 @@ Requires=network-online.target
 After=network-online.target
 
 [Service]
-WorkingDirectory=/etc/consul.d
+WorkingDirectory=/etc/consul.d/
 Restart=on-failure
-ExecStart=/usr/local/bin/consul agent -config-dir="/etc/consul.d"
+ExecStart=/usr/bin/consul agent -config-dir="/etc/consul.d/"
 ExecReload=/bin/kill -HUP $MAINPID
 KillSignal=SIGINT
 
-Enviroment=CONSUL_TOKEN=${hcp_acl_token}
+Environment=CONSUL_TOKEN=${hcp_acl_token}
 [Install]
 WantedBy=multi-user.target
 EOF
+sudo systemctl daemon-reload
 sudo systemctl enable consul
 sudo systemctl start consul
 
@@ -82,20 +86,32 @@ sudo systemctl start consul
 
 echo "--> setting up resolv.conf"
 ##################################
-ln -sf /run/systemd/resolve/resolv.conf /etc/resolv.conf
 
-mkdir /etc/systemd/resolved.conf.d
-touch /etc/systemd/resolved.conf.d/forward-consul-domains.conf
+mkdir -p /etc/systemd/resolved.conf.d
+cat << EOSDRCF >/etc/systemd/resolved.conf.d/consul.conf
+# Enable forward lookup of the 'consul' domain:
+[Resolve]
+Cache=no
+DNS=127.0.0.1:8600
+Domains=~.consul
+EOSDRCF
 
-IPV4=$(ec2metadata --local-ipv4)
+cat << EOSDRLF >/etc/systemd/resolved.conf.d/listen.conf
+# Enable listener on private ip:
+[Resolve]
+DNSStubListenerExtra=$${LOCAL_IPV4}
+EOSDRLF
 
-printf "[Resolve]\nDNS=127.0.0.1\nDomains=~consul\n" > /etc/systemd/resolved.conf.d/forward-consul-domains.conf
+systemctl restart systemd-resolved.service
 
-sudo iptables -t nat -A OUTPUT -d localhost -p udp -m udp --dport 53 -j REDIRECT --to-ports 8600
-sudo iptables -t nat -A OUTPUT -d localhost -p tcp -m tcp --dport 53 -j REDIRECT --to-ports 8600
+cat << EODDJ >/etc/docker/daemon.json
+{
+  "dns": ["$${LOCAL_IPV4}"],
+  "dns-search": ["service.consul"]
+}
+EODDJ
 
-systemctl daemon-reload
-systemctl restart systemd-resolved
+systemctl restart docker.service
 ##################################
 
 echo "==> Consul is done!"

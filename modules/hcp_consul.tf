@@ -30,6 +30,28 @@ resource "consul_acl_policy" "agent" {
     RULE
 }
 
+resource "consul_acl_policy" "anon" {
+  name        = "anon"
+  datacenters = [hcp_consul_cluster.hcp_demostack.datacenter]
+  rules       = <<-RULE
+    node_prefix "" {
+      policy = "read"
+    }
+    service_prefix "" {
+      policy = "read"
+    }
+    key_prefix "" {
+      policy = "read"
+    }
+
+    RULE
+}
+
+resource "consul_acl_token_policy_attachment" "anon-readonly-policy-attachment" {
+    token_id = "00000000-0000-0000-0000-000000000002"
+    policy   = consul_acl_policy.anon.name
+}
+
 resource "consul_acl_token" "agent-token" {
   depends_on  = [hcp_consul_cluster.hcp_demostack, hcp_vault_cluster.hcp_demostack]
   count       = var.workers

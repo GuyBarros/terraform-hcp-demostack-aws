@@ -18,6 +18,7 @@ sudo mkdir -p /etc/nomad.d
 echo "--> clean up any default config."
 sudo rm  /etc/nomad.d/*
 
+ sudo chown ubuntu:ubuntu /opt/nomad/
 
 echo "--> Installing"
 sudo mkdir -p /mnt/nomad
@@ -54,11 +55,11 @@ client {
 }
 
 tls {
-  rpc  = true
-  http = true
-  ca_file   = "/usr/local/share/ca-certificates/01-me.crt"
-  cert_file = "/etc/ssl/certs/me.crt"
-  key_file  = "/etc/ssl/certs/me.key"
+  rpc  = false
+  http = false
+  # ca_file   = "/usr/local/share/ca-certificates/01-me.crt"
+  # cert_file = "/etc/ssl/certs/me.crt"
+  # key_file  = "/etc/ssl/certs/me.key"
   verify_server_hostname = false
 }
 consul {
@@ -111,7 +112,7 @@ Requires=network-online.target
 After=network-online.target
 
 [Service]
-ExecStart=/usr/local/bin/nomad agent -config="/etc/nomad.d"
+ExecStart=/usr/bin/nomad agent -config="/etc/nomad.d"
 ExecReload=/bin/kill -HUP $MAINPID
 KillSignal=SIGINT
 Restart=on-failure

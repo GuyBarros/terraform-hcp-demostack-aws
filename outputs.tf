@@ -25,3 +25,11 @@ output "Primary_Boundary" {
 output "Primary_workers_Nodes" {
   value = module.primarycluster.workers
 }
+
+output "HCP_Consul_Public_address" {
+  value = module.primarycluster.consul_address
+}
+
+output "HCP_Vault_Public_address" {
+  value = module.primarycluster.vault_address
+}

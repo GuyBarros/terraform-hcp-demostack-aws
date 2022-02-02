@@ -23,3 +23,12 @@ output "boundary_ui" {
   value = "http://${aws_route53_record.boundary.fqdn}:9200"
   # value = "troubleshooting"
 }
+
+output "consul_address" {
+  value = hcp_consul_cluster.hcp_demostack.consul_public_endpoint_url
+  # value = "troubleshooting"
+}
+output "vault_address" {
+  value = hcp_vault_cluster.hcp_demostack.vault_public_endpoint_url
+  # value = "troubleshooting"
+}
