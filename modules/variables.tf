@@ -32,44 +32,16 @@ variable "workers" {
   default     = "3"
 }
 
-variable "consul_url" {
-  description = "The url to download Consul."
-  default     = "https://releases.hashicorp.com/consul/1.2.3/consul_1.2.3_linux_amd64.zip"
-}
-
-variable "consul_ent_url" {
-  description = "The url to download Consul."
-  default     = "https://s3-us-west-2.amazonaws.com/hc-enterprise-binaries/consul/ent/1.2.3/consul-enterprise_1.2.3%2Bent_linux_amd64.zip"
-}
 
 variable "fabio_url" {
   description = "The url download fabio."
   default     = "https://github.com/fabiolb/fabio/releases/download/v1.5.7/fabio-1.5.7-go1.9.2-linux_amd64"
 }
 
-variable "nomad_url" {
-  description = "The url to download nomad."
-  default     = "https://releases.hashicorp.com/nomad/0.8.6/nomad_0.8.6_linux_amd64.zip"
-}
-
-variable "nomad_ent_url" {
-  description = "The url to download nomad."
-  default     = "https://releases.hashicorp.com/nomad/0.8.6/nomad_0.8.6_linux_amd64.zip"
-}
 
 variable "cni_plugin_url" {
   description = "The url to download teh CNI plugin for nomad."
   default     = "https://github.com/containernetworking/plugins/releases/download/v0.8.2/cni-plugins-linux-amd64-v0.8.2.tgz"
-}
-
-variable "vault_url" {
-  description = "The url to download vault."
-  default     = "https://releases.hashicorp.com/vault/0.11.1/vault_0.11.1_linux_amd64.zip"
-}
-
-variable "vault_ent_url" {
-  description = "The url to download vault."
-  default     = "https://s3-us-west-2.amazonaws.com/hc-enterprise-binaries/vault/ent/0.11.1/vault-enterprise_0.11.1%2Bent_linux_amd64.zip"
 }
 
 variable "owner" {
@@ -118,16 +90,6 @@ variable "public_key" {
 variable "enterprise" {
   description = "do you want to use the enterprise version of the binaries"
   default     = false
-}
-
-variable "vaultlicense" {
-  description = "Enterprise License for Vault"
-  default     = ""
-}
-
-variable "consullicense" {
-  description = "Enterprise License for Consul"
-  default     = ""
 }
 
 variable "nomadlicense" {
@@ -179,10 +141,21 @@ variable "host_access_ip" {
   default     = []
 }
 
-variable "hcp_cluster_tier" {
+variable "hcp_consul_cluster_tier" {
   description = "the HCP Consul Cluster tier that you  want to use"
-  default     = "development"
+  default     = "standard"
 }
+
+variable "hcp_consul_cluster_size" {
+  description = "the HCP Consul Cluster tier that you  want to use"
+  default     = "small"
+}
+
+variable "hcp_vault_cluster_tier" {
+  description = "the HCP Consul Cluster tier that you  want to use"
+  default     = "standard_small"
+}
+
 
 variable "hcp_hvn_id" {
   description = "the Hashicorp Virtual Network id you want use"

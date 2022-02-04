@@ -2,7 +2,8 @@
 resource "hcp_consul_cluster" "hcp_demostack" {
   hvn_id          = hcp_hvn.demostack.hvn_id
   cluster_id      = "${var.namespace}-consul"
-  tier            = var.hcp_cluster_tier
+  tier            = var.hcp_consul_cluster_tier
+  size            = var.hcp_consul_cluster_size
   datacenter      = var.region
   public_endpoint = true
 }

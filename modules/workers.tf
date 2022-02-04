@@ -26,21 +26,14 @@ data "template_file" "workers" {
     hcp_config_file = hcp_consul_cluster.hcp_demostack.consul_config_file
     hcp_ca_file     = hcp_consul_cluster.hcp_demostack.consul_ca_file
     hcp_acl_token   = element(data.consul_acl_token_secret_id.token.*.secret_id, count.index)
-    consul_url      = var.consul_url
-    consul_ent_url  = var.consul_ent_url
-
 
     # Vault
-    vault_url     = var.vault_url
-    vault_ent_url = var.vault_ent_url
-    VAULT_ADDR    = "${hcp_vault_cluster.hcp_demostack.vault_private_endpoint_url}"
+    VAULT_ADDR    = hcp_vault_cluster.hcp_demostack.vault_private_endpoint_url
     VAULT_TOKEN   = hcp_vault_cluster_admin_token.root.token
 
     # Nomad
     nomad_workers  = var.workers
     nomad_gossip_key = var.nomad_gossip_key
-    nomad_url      = var.nomad_url
-    nomad_ent_url  = var.nomad_ent_url
     cni_plugin_url = var.cni_plugin_url
     run_nomad_jobs = var.run_nomad_jobs
     nomadlicense     = var.nomadlicense

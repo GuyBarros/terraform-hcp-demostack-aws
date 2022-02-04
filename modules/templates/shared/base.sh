@@ -103,15 +103,15 @@ EOF
 source /etc/profile.d/checkpoint.sh
 
 #echo "--> Setting hostname..."
-echo "${node_name}" | sudo tee /etc/hostname
-sudo hostname -F /etc/hostname
+# echo "${node_name}" | sudo tee /etc/hostname
+# sudo hostname -F /etc/hostname
 
-echo "--> Adding hostname to /etc/hosts"
-sudo tee -a /etc/hosts > /dev/null <<EOF
+# echo "--> Adding hostname to /etc/hosts"
+# sudo tee -a /etc/hosts > /dev/null <<EOF
 
- For local resolution
-$(private_ip)  ${node_name}
-EOF
+#  For local resolution
+# $(private_ip)  ${node_name}
+# EOF
 
 
 

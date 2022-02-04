@@ -2,7 +2,7 @@
 
 provider "consul" {
 
- alias   = "consul_terraprimary"
+  alias = "consul_terraprimary"
 }
 
 // Configure the provider
@@ -13,34 +13,30 @@ provider "hcp" {
 
 module "primarycluster" {
 
-  source               = "./modules"
+  source = "./modules"
   # count   = var.create_primary_cluster ? 1 : 0
-  owner                = var.owner
-  region               = var.primary_region
-  namespace            = var.primary_namespace
-  public_key           = var.public_key
-  workers              = var.workers
-  vaultlicense         = var.vaultlicense
-  consullicense        = var.consullicense
-  nomadlicense         = var.nomadlicense
-  enterprise           = var.enterprise
-  consul_url           = var.consul_url
-  consul_ent_url       = var.consul_ent_url
-  fabio_url            = var.fabio_url
-  nomad_url            = var.nomad_url
-  nomad_ent_url        = var.nomad_ent_url
-  cni_plugin_url       = var.cni_plugin_url
-  vault_url            = var.vault_url
-  vault_ent_url        = var.vault_ent_url
-  created-by           = var.created-by
-  sleep-at-night       = var.sleep-at-night
-  TTL                  = var.TTL
-  vpc_cidr_block       = var.vpc_cidr_block
-  cidr_blocks          = var.cidr_blocks
-  instance_type_worker = var.instance_type_worker
-  zone_id              = data.terraform_remote_state.dns.outputs.aws_sub_zone_id
-  run_nomad_jobs       = var.run_nomad_jobs
-  host_access_ip       = var.host_access_ip
+  owner                   = var.owner
+  region                  = var.primary_region
+  namespace               = var.primary_namespace
+  public_key              = var.public_key
+  workers                 = var.workers
+  nomadlicense            = var.nomadlicense
+  enterprise              = var.enterprise
+  fabio_url               = var.fabio_url
+  cni_plugin_url          = var.cni_plugin_url
+  created-by              = var.created-by
+  sleep-at-night          = var.sleep-at-night
+  TTL                     = var.TTL
+  vpc_cidr_block          = var.vpc_cidr_block
+  cidr_blocks             = var.cidr_blocks
+  instance_type_worker    = var.instance_type_worker
+  zone_id                 = data.terraform_remote_state.dns.outputs.aws_sub_zone_id
+  run_nomad_jobs          = var.run_nomad_jobs
+  host_access_ip          = var.host_access_ip
+  hcp_consul_cluster_tier = var.hcp_consul_cluster_tier
+  hcp_consul_cluster_size = var.hcp_consul_cluster_size
+  hcp_vault_cluster_tier  = var.hcp_vault_cluster_tier
+  hcp_hvn_id              = var.hcp_hvn_id
 
 
   # EMEA-SE-PLAYGROUND

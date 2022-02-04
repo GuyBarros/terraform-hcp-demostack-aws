@@ -87,31 +87,43 @@ sudo systemctl start consul
 echo "--> setting up resolv.conf"
 ##################################
 
+=$(ec2metadata --local-ipv4)
+
+#####
+# Configure resolving
+#####
+
+echo "Determining local IP address"
+LOCAL_IPV4=$(ec2metadata --local-ipv4)
+
+
 mkdir -p /etc/systemd/resolved.conf.d
 cat << EOSDRCF >/etc/systemd/resolved.conf.d/consul.conf
 # Enable forward lookup of the 'consul' domain:
 [Resolve]
 Cache=no
 DNS=127.0.0.1:8600
+DNSSEC=false
 Domains=~.consul
 EOSDRCF
 
 cat << EOSDRLF >/etc/systemd/resolved.conf.d/listen.conf
 # Enable listener on private ip:
 [Resolve]
-DNSStubListenerExtra=$${LOCAL_IPV4}
+DNSStubListenerExtra=$(ec2metadata --local-ipv4)
 EOSDRLF
 
 systemctl restart systemd-resolved.service
 
 cat << EODDJ >/etc/docker/daemon.json
 {
-  "dns": ["$${LOCAL_IPV4}"],
+  "dns": ["$(ec2metadata --local-ipv4)"],
   "dns-search": ["service.consul"]
 }
 EODDJ
 
 systemctl restart docker.service
+
 ##################################
 
 echo "==> Consul is done!"

@@ -15,6 +15,11 @@ echo "--> Writing configuration"
 sudo mkdir -p /mnt/nomad
 sudo mkdir -p /etc/nomad.d
 
+export VAULT_TOKEN=${VAULT_TOKEN}
+export VAULT_ADDR=${VAULT_ADDR}
+export VAULT_NAMESPACE=admin
+export NOMAD_VAULT_TOKEN="$(vault token create -field=token -policy=superuser -policy=nomad-server -display-name=${node_name} -period=72h)"
+
 echo "--> clean up any default config."
 sudo rm  /etc/nomad.d/*
 
@@ -29,8 +34,8 @@ data_dir     = "/mnt/nomad"
 enable_debug = true
 bind_addr = "0.0.0.0"
 
-datacenter = "$AWS_AZ"
-region = "$AWS_REGION"
+datacenter = "$AWS_REGION"
+region = "aws"
 
 advertise {
   http = "$(public_ip):4646"
@@ -69,10 +74,13 @@ consul {
     auto_advertise = true
     server_auto_join = true
     client_auto_join = true
+    namespace = "default"
+    ca_file = "/etc/consul.d/ca.pem"
+
 }
 vault {
   enabled          = true
-  address          = "https://vault.service.consul:8200"
+  address          = "${VAULT_ADDR}"
   namespace        = "admin"
   create_from_role = "nomad-cluster"
 }
@@ -119,7 +127,7 @@ Restart=on-failure
 LimitNOFILE=65536
 #Enterprise License
 Environment=NOMAD_LICENSE=${nomadlicense}
-Environment=VAULT_TOKEN=${VAULT_TOKEN}
+Environment=VAULT_TOKEN=$(vault token create -field=token -policy=superuser -policy=nomad-server -display-name=${node_name} -period=72h)
 Enviroment=CONSUL_TOKEN=${hcp_acl_token}
 [Install]
 WantedBy=multi-user.target
