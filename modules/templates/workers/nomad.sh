@@ -58,11 +58,11 @@ client {
 }
 
 tls {
-  rpc  = false
-  http = false
-  # ca_file   = "/usr/local/share/ca-certificates/01-me.crt"
-  # cert_file = "/etc/ssl/certs/me.crt"
-  # key_file  = "/etc/ssl/certs/me.key"
+  rpc  = true
+  http = true
+  ca_file   = "/usr/local/share/ca-certificates/01-me.crt"
+  cert_file = "/etc/ssl/certs/me.crt"
+  key_file  = "/etc/ssl/certs/me.key"
   verify_server_hostname = false
 }
 consul {
