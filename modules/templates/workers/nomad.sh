@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 echo "==> Nomad (client)"
 
-
 echo "--> Installing CNI plugin"
 sudo mkdir -p /opt/cni/bin/
 wget -O cni.tgz ${cni_plugin_url}
@@ -9,7 +8,6 @@ sudo tar -xzf cni.tgz -C /opt/cni/bin/
 
 export AWS_REGION=$(curl -fsq http://169.254.169.254/latest/meta-data/placement/availability-zone |  sed 's/[a-z]$//')
 export AWS_AZ=$(curl http://169.254.169.254/latest/meta-data/placement/availability-zone)
-
 
 echo "--> Writing configuration"
 sudo mkdir -p /mnt/nomad
@@ -68,15 +66,13 @@ tls {
   verify_server_hostname = false
 }
 consul {
-    address = "localhost:8500"
     server_service_name = "nomad-server"
     client_service_name = "nomad-client"
     auto_advertise = true
     server_auto_join = true
     client_auto_join = true
-    namespace = "default"
     ca_file = "/etc/consul.d/ca.pem"
-
+    token = "${hcp_acl_token}"
 }
 vault {
   enabled          = true
@@ -128,7 +124,6 @@ LimitNOFILE=65536
 #Enterprise License
 Environment=NOMAD_LICENSE=${nomadlicense}
 Environment=VAULT_TOKEN=$(vault token create -field=token -policy=superuser -policy=nomad-server -display-name=${node_name} -period=72h)
-Enviroment=CONSUL_TOKEN=${hcp_acl_token}
 [Install]
 WantedBy=multi-user.target
 EOF

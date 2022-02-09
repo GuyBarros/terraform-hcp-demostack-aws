@@ -6,8 +6,7 @@ data "template_file" "workers" {
     file("${path.module}/templates/shared/docker.sh"),
     file("${path.module}/templates/workers/consul.sh"),
     file("${path.module}/templates/workers/vault.sh"),
-    file("${path.module}/templates/workers/nomad.sh"),
-    file("${path.module}/templates/workers/ebs_volumes.sh"),
+    file("${path.module}/templates/workers/nomad.sh")
   ]))
 
   vars = {

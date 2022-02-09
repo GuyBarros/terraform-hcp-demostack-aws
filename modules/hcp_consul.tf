@@ -18,16 +18,25 @@ resource "consul_acl_policy" "agent" {
   name        = "agent"
   datacenters = [hcp_consul_cluster.hcp_demostack.datacenter]
   rules       = <<-RULE
-    node_prefix "" {
-      policy = "write"
-    }
-    service_prefix "" {
-      policy = "write"
-    }
-    key_prefix "" {
-      policy = "write"
-    }
+   agent_prefix "" {
+  policy = "write"
+}
 
+node_prefix "" {
+  policy = "write"
+}
+
+service "nomad" {
+  policy = "write"
+}
+
+service_prefix "" {
+  policy = "write"
+}
+
+acl = "write"
+
+operator = "write"
     RULE
 }
 
