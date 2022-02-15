@@ -5,6 +5,8 @@
 *.tfstate
 *.tfstate.*
 
+helpers.sh
+
 # Crash log files
 crash.log
 
