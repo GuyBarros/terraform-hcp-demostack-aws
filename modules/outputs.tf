@@ -32,3 +32,9 @@ output "vault_address" {
   value = hcp_vault_cluster.hcp_demostack.vault_public_endpoint_url
   # value = "troubleshooting"
 }
+output "consul_token" {
+  value = hcp_consul_cluster_root_token.root.secret_id
+}
+output "vault_token" {
+  value = hcp_vault_cluster_admin_token.root.token
+}

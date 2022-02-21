@@ -1,10 +1,3 @@
-
-
-provider "consul" {
-
-  alias = "consul_terraprimary"
-}
-
 // Configure the provider
 provider "hcp" {
 

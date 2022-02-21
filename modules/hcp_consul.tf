@@ -109,3 +109,6 @@ resource "consul_node" "vault" {
   # address = hcp_vault_cluster.hcp_demostack.vault_public_endpoint_url
   address = replace(hcp_vault_cluster.hcp_demostack.vault_private_endpoint_url, ":8200", "")
 }
+resource "hcp_consul_cluster_root_token" "root" {
+  cluster_id = "${var.namespace}-consul"
+}
