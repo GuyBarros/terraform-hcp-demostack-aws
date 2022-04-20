@@ -79,11 +79,11 @@ variable "workers" {
 
 variable "fabio_url" {
   description = "The url download fabio."
-  default     = "https://github.com/fabiolb/fabio/releases/download/v1.5.7/fabio-1.5.7-go1.9.2-linux_amd64"
+  default     = "https://github.com/fabiolb/fabio/releases/download/v1.6.0/fabio-1.6.0-linux_amd64"
 }
 
 variable "cni_plugin_url" {
-  description = "The url to download teh CNI plugin for nomad."
+  description = "The url to download the CNI plugin for nomad."
   default     = "https://github.com/containernetworking/plugins/releases/download/v0.8.2/cni-plugins-linux-amd64-v0.8.2.tgz"
 }
 
@@ -91,9 +91,17 @@ variable "owner" {
   description = "IAM user responsible for lifecycle of cloud resources used for training"
 }
 
+variable "se-region" {
+  description = "Mandatory tags for the SE organization"
+}
+
 variable "created-by" {
   description = "Tag used to identify resources created programmatically by Terraform"
   default     = "Terraform"
+}
+variable "purpose" {
+  description = "purpose to be added to the default tags"
+  default     = "HCP SE demostack"
 }
 
 variable "sleep-at-night" {
@@ -138,11 +146,7 @@ variable "nomadlicense" {
 
 variable "instance_type_worker" {
   description = "The type(size) of data worker (consul, nomad, etc)."
-  default     = "t2.medium"
-}
-
-variable "ca_key_algorithm" {
-  default = ""
+  default     = "t3.medium"
 }
 
 variable "ca_private_key_pem" {
@@ -182,7 +186,11 @@ variable "hcp_consul_cluster_id" {
 
 variable "hcp_consul_cluster_tier" {
   description = "the HCP Consul Cluster tier that you  want to use"
-  default     = "standard"
+  default     = "plus"
+    validation {
+    condition     = contains(["development", "standard", "plus"], var.hcp_consul_cluster_tier)
+    error_message = "Valid values for var: hcp_consul_cluster_tier are (development, standard, plus)."
+  } 
 }
 
 variable "hcp_consul_cluster_size" {
@@ -192,14 +200,15 @@ variable "hcp_consul_cluster_size" {
 
 variable "hcp_vault_cluster_tier" {
   description = "the HCP Consul Cluster tier that you  want to use"
-  default     = "standard_small"
+  default     = "plus_small"
+  validation {
+    condition     = contains(["dev", "starter_small", "standard_small", "standard_medium", "standard_large", "plus_small", "plus_medium", "plus_large"], var.hcp_vault_cluster_tier)
+    error_message = "Valid values for var: hcp_vault_cluster_tier are (dev, starter_small, standard_small, standard_medium, standard_large, plus_small, plus_medium, plus_large)."
+  } 
 }
-
-
 
 variable "hcp_hvn_id" {
   description = "the Hashicorp Virtual Network id you want use"
-  default     = "guystack"
 }
 
 variable "hcp_vault_cluster_id" {
