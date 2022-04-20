@@ -24,13 +24,19 @@ output "boundary_ui" {
   # value = "troubleshooting"
 }
 
+output "waypoint_ui" {
+  value = "https://${aws_route53_record.waypoint.fqdn}:9702"
+}
+
+output "waypoint" {
+  value = "${aws_route53_record.waypoint.fqdn}:9701"
+}
+
 output "consul_address" {
   value = hcp_consul_cluster.hcp_demostack.consul_public_endpoint_url
-  # value = "troubleshooting"
 }
 output "vault_address" {
   value = hcp_vault_cluster.hcp_demostack.vault_public_endpoint_url
-  # value = "troubleshooting"
 }
 output "consul_token" {
   value = hcp_consul_cluster_root_token.root.secret_id
