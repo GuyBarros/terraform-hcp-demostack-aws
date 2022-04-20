@@ -58,8 +58,8 @@ resource "consul_acl_policy" "anon" {
 }
 
 resource "consul_acl_token_policy_attachment" "anon-readonly-policy-attachment" {
-    token_id = "00000000-0000-0000-0000-000000000002"
-    policy   = consul_acl_policy.anon.name
+  token_id = "00000000-0000-0000-0000-000000000002"
+  policy   = consul_acl_policy.anon.name
 }
 
 resource "consul_acl_token" "agent-token" {

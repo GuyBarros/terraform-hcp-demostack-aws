@@ -12,7 +12,6 @@ resource "tls_private_key" "workers" {
 # Client signing request
 resource "tls_cert_request" "workers" {
   count           = var.workers
-  key_algorithm   = element(tls_private_key.workers.*.algorithm, count.index)
   private_key_pem = element(tls_private_key.workers.*.private_key_pem, count.index)
 
   subject {
@@ -34,6 +33,7 @@ resource "tls_cert_request" "workers" {
 
     # Common
     "localhost",
+    "127.0.0.1",
     "*.${var.namespace}.${data.aws_route53_zone.fdqn.name}",
   ]
 
@@ -51,7 +51,6 @@ resource "tls_locally_signed_cert" "workers" {
   count            = var.workers
   cert_request_pem = element(tls_cert_request.workers.*.cert_request_pem, count.index)
 
-  ca_key_algorithm   = var.ca_key_algorithm
   ca_private_key_pem = var.ca_private_key_pem
   ca_cert_pem        = var.ca_cert_pem
 

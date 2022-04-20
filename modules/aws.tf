@@ -6,12 +6,8 @@ data "aws_route53_zone" "fdqn" {
 
 data "aws_ami" "ubuntu" {
   most_recent = true
-
-  # ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*
-  #ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-*
   filter {
     name = "name"
-    # values = ["ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-*"]
     # values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
     values = ["ubuntu/images/*ubuntu-hirsute-21.04-amd64-server-*"]
   }
@@ -45,8 +41,8 @@ resource "aws_route" "internet_access" {
 
 
 resource "aws_route" "hcp_peering" {
-  route_table_id         = aws_vpc.demostack.main_route_table_id
-  destination_cidr_block = hcp_hvn.demostack.cidr_block
+  route_table_id            = aws_vpc.demostack.main_route_table_id
+  destination_cidr_block    = hcp_hvn.demostack.cidr_block
   vpc_peering_connection_id = hcp_aws_network_peering.demostack_peering.provider_peering_id
 }
 
@@ -60,7 +56,7 @@ resource "aws_subnet" "demostack" {
   cidr_block              = var.cidr_blocks[count.index]
   map_public_ip_on_launch = true
   tags = {
-    Name = "${var.namespace}-${count.index}"
+    Name = "${var.namespace}-${count.index}" #"
   }
 }
 
@@ -193,6 +189,13 @@ resource "aws_security_group" "demostack" {
   ingress {
     from_port   = 5000
     to_port     = 5500
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  #waypoint ports
+  ingress {
+    from_port   = 9700
+    to_port     = 9702
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }

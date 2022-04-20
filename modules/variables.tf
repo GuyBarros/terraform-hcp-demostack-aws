@@ -100,11 +100,7 @@ variable "nomadlicense" {
 
 variable "instance_type_worker" {
   description = "The type(size) of data workers (consul, nomad, etc)."
-  default     = "t2.xlarge"
-}
-
-variable "ca_key_algorithm" {
-  default = ""
+  default     = "t3.medium"
 }
 
 variable "ca_private_key_pem" {
@@ -143,7 +139,11 @@ variable "host_access_ip" {
 
 variable "hcp_consul_cluster_tier" {
   description = "the HCP Consul Cluster tier that you  want to use"
-  default     = "standard"
+  default     = "plus"
+  validation {
+    condition     = contains(["development", "standard", "plus"], var.hcp_consul_cluster_tier)
+    error_message = "Valid values for var: hcp_consul_cluster_tier are (development, standard, plus)."
+  } 
 }
 
 variable "hcp_consul_cluster_size" {
@@ -153,11 +153,13 @@ variable "hcp_consul_cluster_size" {
 
 variable "hcp_vault_cluster_tier" {
   description = "the HCP Consul Cluster tier that you  want to use"
-  default     = "standard_small"
+  default     = "plus_small"
+  validation {
+    condition     = contains(["dev", "starter_small", "standard_small", "standard_medium", "standard_large", "plus_small", "plus_medium", "plus_large"], var.hcp_vault_cluster_tier)
+    error_message = "Valid values for var: hcp_vault_cluster_tier are (dev, starter_small, standard_small, standard_medium, standard_large, plus_small, plus_medium, plus_large)."
+  } 
 }
-
 
 variable "hcp_hvn_id" {
   description = "the Hashicorp Virtual Network id you want use"
-  default     = "demostack"
 }

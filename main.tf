@@ -1,6 +1,16 @@
 // Configure the provider
-provider "hcp" {
-
+provider "aws" {
+  region = var.primary_region
+  default_tags {
+    tags = {
+      Name      = var.namespace
+      owner     = var.owner
+      se-region = var.se-region
+      terraform = true
+      purpose   = var.purpose
+      ttl       = var.TTL
+    }
+  }
 }
 
 
@@ -33,7 +43,6 @@ module "primarycluster" {
 
 
   # EMEA-SE-PLAYGROUND
-  ca_key_algorithm      = data.terraform_remote_state.tls.outputs.ca_key_algorithm
   ca_private_key_pem    = data.terraform_remote_state.tls.outputs.ca_private_key_pem
   ca_cert_pem           = data.terraform_remote_state.tls.outputs.ca_cert_pem
   consul_join_tag_value = "${var.namespace}-${data.terraform_remote_state.tls.outputs.consul_join_tag_value}"
