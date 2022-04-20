@@ -1,12 +1,13 @@
 echo "--> Configuring EBS mounts"
+sleep 5
 
-export NOMAD_ADDR=https://localhost:4646
+sudo mkdir -p /etc/nomad.d/default_jobs/
 
 echo "--> Create EBS CSI plugin job"
 {
 sudo tee  /etc/nomad.d/default_jobs/plugin-ebs-controller.nomad > /dev/null <<EOF
 job "plugin-aws-ebs-controller" {
-  datacenters = ["${dc1}","${dc2}","${dc3}"]
+  datacenters = ["${region}"]
 
   group "controller" {
     task "plugin" {
@@ -44,7 +45,7 @@ echo "--> Create Nodes CSI plugin job"
 {
 sudo tee  /etc/nomad.d/default_jobs/plugin-ebs-nodes.nomad > /dev/null <<EOF
 job "plugin-aws-ebs-nodes" {
-  datacenters = ["${dc1}","${dc2}","${dc3}"]
+  datacenters = ["${region}"]
 
   # you can run node plugins as service jobs as well, but this ensures
   # that all nodes in the DC have a copy.
@@ -86,39 +87,6 @@ EOF
 } || {
     echo "--> Nodes job skipped"
 }
-echo "--> Mysql"
-{
-sudo tee  /etc/nomad.d/default_jobs/mysql_ebs_volume.hcl > /dev/null <<EOF
-# volume registration
-type = "csi"
-id = "mysql"
-name = "mysql"
-external_id = "${aws_ebs_volume_mysql_id}"
-access_mode = "single-node-writer"
-attachment_mode = "file-system"
-plugin_id = "aws-ebs0"
-EOF
-} || {
-    echo "--> Mysql failed, probably already done"
-}
-
-echo "--> Mongodb"
-{
-sudo tee  /etc/nomad.d/default_jobs/mongodb_ebs_volume.hcl > /dev/null <<EOF
-# volume registration
-type = "csi"
-id = "mongodb"
-name = "mongodb"
-external_id = "${aws_ebs_volume_mongodb_id}"
-access_mode = "single-node-writer"
-attachment_mode = "file-system"
-plugin_id = "aws-ebs0"
-EOF
-
-
-} || {
-    echo "--> MongoDB failed, probably already done"
-}
 
 echo "--> Prometheus"
 {
@@ -128,9 +96,11 @@ type = "csi"
 id = "prometheus"
 name = "prometheus"
 external_id = "${aws_ebs_volume_prometheus_id}"
-access_mode = "single-node-writer"
-attachment_mode = "file-system"
 plugin_id = "aws-ebs0"
+capability {
+  access_mode     = "single-node-writer"
+  attachment_mode = "file-system"
+}
 EOF
 } || {
     echo "--> Prometheus failed, probably already done"
@@ -143,9 +113,11 @@ type = "csi"
 id = "shared"
 name = "shared"
 external_id = "${aws_ebs_volume_shared_id}"
-access_mode = "single-node-writer"
-attachment_mode = "file-system"
 plugin_id = "aws-ebs0"
+capability {
+  access_mode     = "single-node-writer"
+  attachment_mode = "file-system"
+}
 EOF
 } || {
     echo "--> Shared failed, probably already done"
@@ -154,14 +126,22 @@ EOF
 if [ ${index} == ${count} ]
 then
 echo "--> last worker, lets do this"
-nomad run  /etc/nomad.d/default_jobs/plugin-ebs-controller.nomad
-nomad run  /etc/nomad.d/default_jobs/plugin-ebs-nodes.nomad
 
-sleep 5
-nomad volume register /etc/nomad.d/default_jobs/mongodb_ebs_volume.hcl
+sudo apt install -y jq
+
+nomad acl bootstrap -json > nomad_acls.json
+export NOMAD_TOKEN=$(jq -r .SecretID nomad_acls.json)
+vault secrets enable -version=2 -path=nomad kv
+vault kv put nomad/bootstrap nomad_acls=@nomad_acls.json
+
+
+nomad run /etc/nomad.d/default_jobs/plugin-ebs-controller.nomad
+nomad run /etc/nomad.d/default_jobs/plugin-ebs-nodes.nomad
+
+nomad volume register /etc/nomad.d/default_jobs/prometheus_ebs_volume.hcl
+nomad volume register /etc/nomad.d/default_jobs/shared_ebs_volume.hcl
+
 else
 echo "--> not the last worker, skip"
 fi
-
-
 echo "==> Configuring EBS mounts is Done!"
