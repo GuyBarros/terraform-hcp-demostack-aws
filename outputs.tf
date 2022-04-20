@@ -34,11 +34,18 @@ output "HCP_Vault_Public_address" {
   value = module.primarycluster.vault_address
 }
 output "HCP_Consul_token" {
-  value = module.primarycluster.consul_token
+  value     = module.primarycluster.consul_token
   sensitive = true
 }
 
 output "HCP_Vault_token" {
-  value = module.primarycluster.vault_token
+  value     = module.primarycluster.vault_token
   sensitive = true
+}
+output "waypoint_ui" {
+  value = module.primarycluster.waypoint_ui
+}
+
+output "waypoint" {
+  value = module.primarycluster.waypoint
 }
