@@ -16,8 +16,6 @@ function install_from_url {
   }
 }
 
-
-
 echo "--> Adding helper for IP retrieval"
 sudo tee /etc/profile.d/ips.sh > /dev/null <<EOF
 function private_ip {
@@ -47,7 +45,6 @@ sudo tee /etc/ssl/certs/me.key > /dev/null <<EOF
 ${me_key}
 EOF
 
-
 echo "--> Setting iptables for bridge networking"
 echo 1 > /proc/sys/net/bridge/bridge-nf-call-arptables
 echo 1 > /proc/sys/net/bridge/bridge-nf-call-ip6tables
@@ -67,8 +64,10 @@ curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
 echo "--> updated version of Nodejs"
 curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
 
+sudo apt update
+
 echo "--> Installing common dependencies"
-apt-get install -y \
+sudo apt-get install -y \
   build-essential \
   nodejs \
   curl \
@@ -93,6 +92,7 @@ apt-get install -y \
   prometheus-node-exporter \
   golang-go \
   alien \
+  waypoint \
   &>/dev/null
 
 
@@ -102,50 +102,22 @@ export CHECKPOINT_DISABLE=1
 EOF
 source /etc/profile.d/checkpoint.sh
 
-#echo "--> Setting hostname..."
-# echo "${node_name}" | sudo tee /etc/hostname
-# sudo hostname -F /etc/hostname
-
-# echo "--> Adding hostname to /etc/hosts"
-# sudo tee -a /etc/hosts > /dev/null <<EOF
-
-#  For local resolution
-# $(private_ip)  ${node_name}
-# EOF
-
-
-
 if [ ${enterprise} == 0 ]
 then
-apt-get install -y \
+sudo apt-get install -y \
   vault \
   consul \
   nomad  \
   &>/dev/null
 
 else
-apt-get install -y \
-vault-enterprise \
+sudo apt-get install -y \
+  vault-enterprise \
   consul-enterprise \
   nomad-enterprise  \
   &>/dev/null
 
 fi
-
-# echo "--> Installing dnsmasq"
-# sudo apt-get install -y -q dnsmasq
-#
-# echo "--> Configuring DNSmasq"
-# sudo tee /etc/dnsmasq.d/10-consul > /dev/null << EOF
-# server=/consul/127.0.0.1#8600
-# no-poll
-# server=8.8.8.8
-# server=8.8.4.4
-# cache-size=0
-# EOF
-
- # sudo systemctl enable dnsmasq
- # sudo systemctl restart dnsmasq
 
 echo "--> Install Envoy"
  curl -L https://getenvoy.io/cli | sudo bash -s -- -b /usr/local/bin

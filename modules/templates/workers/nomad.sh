@@ -12,6 +12,7 @@ export AWS_AZ=$(curl http://169.254.169.254/latest/meta-data/placement/availabil
 echo "--> Writing configuration"
 sudo mkdir -p /mnt/nomad
 sudo mkdir -p /etc/nomad.d
+sudo mkdir -p /opt/nomad/scratch
 
 export VAULT_TOKEN=${VAULT_TOKEN}
 export VAULT_ADDR=${VAULT_ADDR}
@@ -21,11 +22,9 @@ export NOMAD_VAULT_TOKEN="$(vault token create -field=token -policy=superuser -p
 echo "--> clean up any default config."
 sudo rm  /etc/nomad.d/*
 
- sudo chown ubuntu:ubuntu /opt/nomad/
+sudo chown ubuntu:ubuntu /opt/nomad/
 
 echo "--> Installing"
-sudo mkdir -p /mnt/nomad
-sudo mkdir -p /etc/nomad.d/default_jobs
 sudo tee /etc/nomad.d/config.hcl > /dev/null <<EOF
 name         = "${node_name}"
 data_dir     = "/mnt/nomad"
@@ -55,6 +54,13 @@ client {
     "type" = "worker",
     "name" = "${node_name}"
   }
+  host_volume "scratch" {
+    path      = "/opt/nomad/scratch"
+    read_only = false
+  }
+}
+acl {
+  enabled = true
 }
 
 tls {
