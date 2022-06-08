@@ -122,7 +122,7 @@ EOF
 } || {
     echo "--> Shared failed, probably already done"
 }
-
+echo "--> checking to see if its last worker ${index} == ${count}"
 if [ ${index} == ${count} ]
 then
 echo "--> last worker, lets do this"
@@ -132,6 +132,7 @@ sudo apt install -y jq
 nomad acl bootstrap -json > nomad_acls.json
 export NOMAD_TOKEN=$(jq -r .SecretID nomad_acls.json)
 vault secrets enable -version=2 -path=nomad kv
+sleep 10
 vault kv put nomad/bootstrap nomad_acls=@nomad_acls.json
 
 

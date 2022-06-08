@@ -53,6 +53,10 @@ resource "consul_acl_policy" "anon" {
     key_prefix "" {
       policy = "read"
     }
+       agent_prefix "" {
+  policy = "write"
+}
+
 
     RULE
 }

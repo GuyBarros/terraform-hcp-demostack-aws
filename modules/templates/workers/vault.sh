@@ -1,11 +1,6 @@
 #!/usr/bin/env bash
 echo "==> Vault (server)"
 
-
-echo "==> checking if we are using enterprise binaries"
-echo "==> value of enterprise is ${enterprise}"
-
-
 echo "--> Attempting to create nomad role"
 
   echo "--> Adding Nomad policy"
