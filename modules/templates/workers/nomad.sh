@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 echo "==> Nomad (client)"
 
+
 echo "--> Installing CNI plugin"
 sudo mkdir -p /opt/cni/bin/
 wget -O cni.tgz ${cni_plugin_url}
@@ -35,9 +36,9 @@ datacenter = "$AWS_REGION"
 region = "aws"
 
 advertise {
-  http = "$(public_ip):4646"
-  rpc  = "$(public_ip):4647"
-  serf = "$(public_ip):4648"
+  http = "$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4):4646"
+  rpc  = "$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4):4647"
+  serf = "$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4):4648"
 }
 server {
   enabled          = true

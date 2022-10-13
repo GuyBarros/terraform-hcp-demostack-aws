@@ -21,10 +21,9 @@ EOF
 
 sudo tee /etc/consul.d/additional_config.json > /dev/null <<EOF
 {
-"advertise_addr": "$(private_ip)",
-"advertise_addr_wan": "$(public_ip)",
-"bind_addr": "0.0.0.0",
-"client_addr": "0.0.0.0",
+"advertise_addr": "$(curl -s http://169.254.169.254/latest/meta-data/local-ipv4)",
+"advertise_addr_wan": "$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)",
+"client_addr": "$(curl -s http://169.254.169.254/latest/meta-data/local-ipv4) 127.0.0.1",
  "node_name": "${node_name}",
 "ports": {
     "http": 8500,

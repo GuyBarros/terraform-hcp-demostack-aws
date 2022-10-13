@@ -17,11 +17,6 @@ output "Primary_Traefik" {
   value = module.primarycluster.traefik_lb
 }
 
-output "Primary_Boundary" {
-  value = module.primarycluster.boundary_ui
-}
-
-
 output "Primary_workers_Nodes" {
   value = module.primarycluster.workers
 }
@@ -32,6 +27,9 @@ output "HCP_Consul_Public_address" {
 
 output "HCP_Vault_Public_address" {
   value = module.primarycluster.vault_address
+}
+output "HCP_Boundary_Public_address" {
+  value = module.primarycluster.boundary_address
 }
 output "HCP_Consul_token" {
   value     = module.primarycluster.consul_token

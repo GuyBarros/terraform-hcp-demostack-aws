@@ -8,6 +8,12 @@ resource "hcp_consul_cluster" "hcp_demostack" {
   public_endpoint = true
 }
 
+resource "time_sleep" "wait_30_seconds" {
+  depends_on = [hcp_consul_cluster.hcp_demostack]
+
+  create_duration = "30s"
+}
+
 provider "consul" {
   address    = hcp_consul_cluster.hcp_demostack.consul_public_endpoint_url
   datacenter = hcp_consul_cluster.hcp_demostack.datacenter
@@ -114,5 +120,6 @@ resource "consul_node" "vault" {
   address = replace(hcp_vault_cluster.hcp_demostack.vault_private_endpoint_url, ":8200", "")
 }
 resource "hcp_consul_cluster_root_token" "root" {
+  depends_on = [time_sleep.wait_30_seconds]
   cluster_id = "${var.namespace}-consul"
 }

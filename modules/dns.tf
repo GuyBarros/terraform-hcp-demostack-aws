@@ -1,11 +1,3 @@
-resource "aws_route53_record" "boundary" {
-  zone_id = var.zone_id
-  name    = "boundary.${var.namespace}"
-  type    = "CNAME"
-  records = [aws_lb.boundary-controller.dns_name]
-  ttl     = "300"
-
-}
 
 resource "aws_route53_record" "waypoint" {
   zone_id = var.zone_id
