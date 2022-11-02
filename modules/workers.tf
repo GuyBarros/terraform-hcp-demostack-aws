@@ -61,6 +61,17 @@ data "cloudinit_config" "workers" {
     cni_plugin_url   = var.cni_plugin_url
     run_nomad_jobs   = var.run_nomad_jobs
     nomadlicense     = var.nomadlicense
+    # Nomad EBS Volumes
+    region     = var.region
+    index                        = count.index + 1
+    count                        = var.workers
+    dc1                          = data.aws_availability_zones.available.names[0]
+    dc2                          = data.aws_availability_zones.available.names[1]
+    dc3                          = data.aws_availability_zones.available.names[2]
+    aws_ebs_volume_mysql_id      = aws_ebs_volume.shared.id
+    aws_ebs_volume_mongodb_id    = aws_ebs_volume.mongodb.id
+    aws_ebs_volume_prometheus_id = aws_ebs_volume.prometheus.id
+    aws_ebs_volume_shared_id     = aws_ebs_volume.shared.id
     })
   }
 

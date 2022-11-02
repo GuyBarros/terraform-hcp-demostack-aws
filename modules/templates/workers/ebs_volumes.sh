@@ -129,11 +129,13 @@ echo "--> last worker, lets do this"
 
 sudo apt install -y jq
 
-nomad acl bootstrap -json > nomad_acls.json
+echo "--> bootstraping Nomad ACLS"
+nomad acl bootstrap -json > /tmp/nomad_acls.json
 export NOMAD_TOKEN=$(jq -r .SecretID nomad_acls.json)
+echo "--> sending bootstrap token to Vault"
 vault secrets enable -version=2 -path=nomad kv
 sleep 10
-vault kv put nomad/bootstrap nomad_acls=@nomad_acls.json
+vault kv put nomad/bootstrap nomad_acls=@/tmp/nomad_acls.json
 
 
 nomad run /etc/nomad.d/default_jobs/plugin-ebs-controller.nomad
