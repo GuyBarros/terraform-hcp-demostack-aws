@@ -1,49 +1,44 @@
-////////////////////// Main //////////////////////////
+////////////////////// Module //////////////////////////
 
 
-// Primary
 
-output "Primary_Nomad" {
-  value = module.primarycluster.nomad_ui
+output "workers" {
+  value = aws_route53_record.workers.*.fqdn
+}
+
+output "traefik_lb" {
+  value = "http://${aws_route53_record.traefik.fqdn}:8080"
+}
+
+output "fabio_lb" {
+  value = "http://${aws_route53_record.fabio.fqdn}:9999"
 }
 
 
-
-output "Primary_Fabio" {
-  value = module.primarycluster.fabio_lb
+output "nomad_ui" {
+  value = "https://${aws_route53_record.nomad.fqdn}:4646"
 }
 
-output "Primary_Traefik" {
-  value = module.primarycluster.traefik_lb
-}
 
-output "Primary_workers_Nodes" {
-  value = module.primarycluster.workers
-}
-
-output "HCP_Consul_Public_address" {
-  value = module.primarycluster.consul_address
-}
-
-output "HCP_Vault_Public_address" {
-  value = module.primarycluster.vault_address
-}
-output "HCP_Boundary_Public_address" {
-  value = module.primarycluster.boundary_address
-}
-output "HCP_Consul_token" {
-  value     = module.primarycluster.consul_token
-  sensitive = true
-}
-
-output "HCP_Vault_token" {
-  value     = module.primarycluster.vault_token
-  sensitive = true
-}
 output "waypoint_ui" {
-  value = module.primarycluster.waypoint_ui
+  value = "https://${aws_route53_record.waypoint.fqdn}:9702"
 }
 
 output "waypoint" {
-  value = module.primarycluster.waypoint
+  value = "${aws_route53_record.waypoint.fqdn}:9701"
+}
+output "boundary_address" {
+  value = hcp_boundary_cluster.hcp_demostack.cluster_url
+}
+output "consul_address" {
+  value = hcp_consul_cluster.hcp_demostack.consul_public_endpoint_url
+}
+output "vault_address" {
+  value = hcp_vault_cluster.hcp_demostack.vault_public_endpoint_url
+}
+output "consul_token" {
+  value = hcp_consul_cluster_root_token.root.secret_id
+}
+output "vault_token" {
+  value = hcp_vault_cluster_admin_token.root.token
 }
