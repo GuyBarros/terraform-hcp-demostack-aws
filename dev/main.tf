@@ -17,7 +17,8 @@ provider "aws" {
 module "primarycluster" {
 
   # source = "../"
-  
+  source  = "app.terraform.io/emea-se-playground-2019/demostack-aws/hcp"
+  version = "0.0.4"
   owner                   = var.owner
   region                  = var.primary_region
   namespace               = var.primary_namespace
