@@ -79,7 +79,7 @@ resource "tls_locally_signed_cert" "workers" {
   private_key_pem = tls_private_key.root.private_key_pem
   ca_cert_pem        = tls_self_signed_cert.root.cert_pem
 
-  validity_period_hours = 720 # 30 days
+  validity_period_hours = "720" # 30 days
 
   allowed_uses = [
     "client_auth",
