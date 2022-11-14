@@ -15,7 +15,7 @@ resource "tls_self_signed_cert" "root" {
     organization = "HashiCorp Demostack"
   }
 
-  validity_period_hours = " 720 # 30 days
+  validity_period_hours = "720" # 30 days
 
   allowed_uses = [
     "cert_signing",
