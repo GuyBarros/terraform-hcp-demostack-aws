@@ -15,7 +15,7 @@ provider "aws" {
 
 
 module "primarycluster" {
-   source  = "app.terraform.io/emea-se-playground-2019/demostack-aws/hcp"
+  source  = "app.terraform.io/emea-se-playground-2019/demostack-aws/hcp"
   # source = "github.com/GuyBarros/terraform-hcp-demostack-aws"
   owner                   = var.owner
   region                  = var.primary_region
@@ -41,10 +41,5 @@ module "primarycluster" {
   hcp_hvn_id              = var.hcp_hvn_id
 
   # EMEA-SE-PLAYGROUND
-  ca_private_key_pem    = var.ca_private_key_pem
-  ca_cert_pem           = var.ca_cert_pem
-  consul_join_tag_value = var.consul_join_tag_value
-  consul_gossip_key     = var.consul_gossip_key
-  consul_master_token   = var.consul_master_token
   nomad_gossip_key      = var.nomad_gossip_key
 }
