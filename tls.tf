@@ -76,7 +76,7 @@ resource "tls_locally_signed_cert" "workers" {
   count            = var.workers
   cert_request_pem = element(tls_cert_request.workers.*.cert_request_pem, count.index)
 
-  private_key_pem = tls_private_key.root.private_key_pem
+  ca_private_key_pem = tls_private_key.root.private_key_pem
   ca_cert_pem        = tls_self_signed_cert.root.cert_pem
 
   validity_period_hours = "720" # 30 days
