@@ -79,8 +79,7 @@ variable "cidr_blocks" {
 }
 
 variable "zone_id" {
-  description = "The CIDR blocks to create the workstations in."
-  default     = ""
+  description = "The Zone ID which Holds the FQDN to which the subdomains will be added "
 }
 
 variable "public_key" {
@@ -88,7 +87,7 @@ variable "public_key" {
 }
 
 variable "enterprise" {
-  description = "do you want to use the enterprise version of the binaries"
+  description = "do you want to use the enterprise version of Nomad"
   default     = false
 }
 
@@ -108,9 +107,8 @@ variable "run_nomad_jobs" {
 }
 
 variable "host_access_ip" {
-  description = "CIDR blocks allowed to connect via SSH on port 22"
+  description = "list of CIDR blocks allowed to connect via SSH on port 22 e.g. your public ip "
   type        = list(string)
-  default     = []
 }
 
 variable "hcp_consul_cluster_tier" {
@@ -125,6 +123,10 @@ variable "hcp_consul_cluster_tier" {
 variable "hcp_consul_cluster_size" {
   description = "the HCP Consul Cluster tier that you  want to use"
   default     = "small"
+  validation {
+    condition     = contains(["x_small", "small", "medium", "large"], var.hcp_consul_cluster_size)
+    error_message = "Valid values for var: hcp_consul_cluster_size are (development, standard, plus)."
+  } 
 }
 
 variable "hcp_vault_cluster_tier" {
