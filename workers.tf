@@ -60,7 +60,7 @@ data "cloudinit_config" "workers" {
     VAULT_TOKEN = hcp_vault_cluster_admin_token.root.token
     # Nomad
     nomad_workers    = var.workers
-    nomad_gossip_key = random_id.nomad_gossip_key.id
+    nomad_gossip_key = base64encode(random_id.nomad_gossip_key.hex)
     cni_plugin_url   = var.cni_plugin_url
     run_nomad_jobs   = var.run_nomad_jobs
     nomadlicense     = var.nomadlicense
