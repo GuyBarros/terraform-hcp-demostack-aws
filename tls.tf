@@ -1,5 +1,30 @@
 
 
+# Root private key
+resource "tls_private_key" "root" {
+  algorithm   = "ECDSA"
+  ecdsa_curve = "P521"
+}
+
+# Root certificate
+resource "tls_self_signed_cert" "root" {
+    private_key_pem = tls_private_key.root.private_key_pem
+  
+  subject {
+    common_name  = var.namespace
+    organization = "HashiCorp Demostack"
+  }
+
+  validity_period_hours = " 720 # 30 days
+
+  allowed_uses = [
+    "cert_signing",
+    "digital_signature",
+    "crl_signing",
+  ]
+
+  is_ca_certificate = true
+}
 
 # Client private key
 
@@ -51,8 +76,8 @@ resource "tls_locally_signed_cert" "workers" {
   count            = var.workers
   cert_request_pem = element(tls_cert_request.workers.*.cert_request_pem, count.index)
 
-  ca_private_key_pem = var.ca_private_key_pem
-  ca_cert_pem        = var.ca_cert_pem
+  private_key_pem = tls_private_key.root.private_key_pem
+  ca_cert_pem        = tls_self_signed_cert.root.cert_pem
 
   validity_period_hours = 720 # 30 days
 
