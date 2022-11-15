@@ -141,3 +141,33 @@ variable "hcp_vault_cluster_tier" {
 variable "hcp_hvn_id" {
   description = "the Hashicorp Virtual Network id you want use"
 }
+
+variable "postgres_username" {
+  description = "Username that will be used to create the AWS Postgres instance"
+  default     = "postgresql"
+}
+
+variable "postgres_password" {
+  description = "Password that will be used to create the AWS Postgres instance"
+  default     = "YourPwdShouldBeLongAndSecure!"
+}
+
+  variable "postgres_db_name" {
+  description = "Db_name that will be used to create the AWS Postgres instance"
+  default     = "postgress"
+}
+
+variable "mysql_username" {
+  description = "Username that will be used to create the AWS mysql instance"
+  default     = "mysql"
+}
+
+variable "mysql_password" {
+  description = "Password that will be used to create the AWS mysql instance"
+  default     = "YourPwdShouldBeLongAndSecure!"
+}
+
+  variable "mysql_db_name" {
+  description = "Db_name that will be used to create the AWS mysql instance"
+  default     = "mydb"
+}
