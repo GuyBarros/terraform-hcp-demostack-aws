@@ -159,7 +159,7 @@ variable "postgres_password" {
 
 variable "mysql_username" {
   description = "Username that will be used to create the AWS mysql instance"
-  default     = "mysql"
+  default     = "foo"
 }
 
 variable "mysql_password" {
