@@ -23,7 +23,7 @@ variable "namespace" {
   description = <<EOH
 this is the differantiates different demostack deployment on the same subscription, everycluster should have a different value
 EOH
-  default     = "connectdemo"
+
 }
 
 
