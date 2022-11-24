@@ -36,3 +36,11 @@ output "consul_address" {
 output "vault_address" {
   value = hcp_vault_cluster.hcp_demostack.vault_public_endpoint_url
 }
+
+output "vault_token" {
+  value = nonsensitive(hcp_vault_cluster_admin_token.root.token)
+}
+
+output "consul_token" {
+  value = nonsensitive(hcp_consul_cluster_root_token.root.secret_id)
+}
