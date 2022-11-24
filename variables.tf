@@ -107,7 +107,7 @@ variable "run_nomad_jobs" {
 }
 
 variable "host_access_ip" {
-  description = "list of CIDR blocks allowed to connect via SSH on port 22 e.g. your public ip "
+  description = "list of CIDR blocks allowed to connect via SSH on port 22 e.g. your public ip format: [\"95.42.255.111/32\"]"
   type        = list(string)
 }
 
