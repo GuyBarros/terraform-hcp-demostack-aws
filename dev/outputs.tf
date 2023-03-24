@@ -36,7 +36,7 @@ output "HCP_Vault_Token" {
 output "HCP_Boundary_Public_address" {
   value = module.primarycluster.boundary_address
 }
-
+/*
 output "waypoint_ui" {
   value = module.primarycluster.waypoint_ui
 }
@@ -44,7 +44,7 @@ output "waypoint_ui" {
 output "waypoint" {
   value = module.primarycluster.waypoint
 }
-
+*/
 output "XX_boundary_config" {
   value = <<EOF
 
