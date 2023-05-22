@@ -45,3 +45,17 @@ skip_final_snapshot    = true
     delete = "10m"
   }
 }
+
+
+//add mongodb
+
+resource "aws_docdb_cluster" "docdb" {
+  cluster_identifier      = "${var.namespace}-documentdb"
+  engine                  = "docdb"
+  master_username         =  var.documentdb_master_username
+  master_password         =  var.documentdb_master__password
+  backup_retention_period = 5
+  preferred_backup_window = "07:00-09:00"
+  skip_final_snapshot     = true
+  vpc_security_group_ids =[aws_security_group.demostack.id]
+}

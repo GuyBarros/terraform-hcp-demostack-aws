@@ -171,3 +171,13 @@ variable "mysql_password" {
   description = "Db_name that will be used to create the AWS mysql instance"
   default     = "mydb"
 }
+
+variable "documentdb_master_username" {
+  description = "Username that will be used to create the AWS Postgres instance"
+  default     = "postgresql"
+}
+
+variable "documentdb_master__password" {
+  description = "Password that will be used to create the AWS Postgres instance"
+  default     = "YourPwdShouldBeLongAndSecure!"
+}
