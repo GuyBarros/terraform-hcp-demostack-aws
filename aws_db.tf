@@ -27,7 +27,7 @@ resource "aws_db_instance" "mysql" {
 resource "aws_db_instance" "postgres" {
 identifier           = "${var.namespace}-postgres"
 engine               = "postgres"
-engine_version         = "14.1"
+engine_version         = "15.3"
 instance_class         = "db.t3.micro"
 
  allocated_storage      = 5

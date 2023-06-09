@@ -13,6 +13,11 @@ provider "aws" {
   }
 }
 
+provider "hcp" {
+  project_id = var.project_id
+}
+
+
 
 module "primarycluster" {
   # source  = "app.terraform.io/emea-se-playground-2019/demostack-aws/hcp"
