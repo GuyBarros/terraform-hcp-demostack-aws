@@ -207,3 +207,8 @@ variable "hcp_consul_token" {
   description = "update before destroy"
   default     = ""
 }
+
+variable "project_id" {
+  description = "the project you want to create resources in"
+  default     = ""
+}
