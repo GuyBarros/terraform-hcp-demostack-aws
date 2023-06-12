@@ -61,11 +61,11 @@ resource "aws_subnet" "demostack" {
   }
 }
 
-resource "aws_db_subnet_group" "default" {
-  name       = "doc-db"
-  subnet_ids = [aws_subnet.demostack.1.id]
+# resource "aws_db_subnet_group" "default" {
+#   name       = "doc-db"
+#   subnet_ids = [aws_subnet.demostack.1.id]
 
-  }
+#   }
 
 
 resource "aws_security_group" "demostack" {
