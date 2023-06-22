@@ -10,11 +10,29 @@ data "cloudinit_config" "workers" {
   gzip          = true
   base64_encode = true
 
-  #base
+  # #base
+  # part {
+  #   content_type = "text/x-shellscript"
+  #   content      = templatefile("${path.module}/templates/shared/base.sh",{
+  #     enterprise = var.enterprise
+  #    me_ca     = tls_self_signed_cert.root.cert_pem
+  #   me_cert    = element(tls_locally_signed_cert.workers.*.cert_pem, count.index)
+  #   me_key     = element(tls_private_key.workers.*.private_key_pem, count.index)
+  #   public_key = var.public_key
+  #   })
+  # }
+    #hashicorp
   part {
     content_type = "text/x-shellscript"
-    content      = templatefile("${path.module}/templates/shared/base.sh",{
+    content      = templatefile("${path.module}/templates/shared/hashicorp.sh",{
       enterprise = var.enterprise
+    })
+  }
+
+    #tls
+  part {
+    content_type = "text/x-shellscript"
+    content      = templatefile("${path.module}/templates/shared/tls.sh",{
      me_ca     = tls_self_signed_cert.root.cert_pem
     me_cert    = element(tls_locally_signed_cert.workers.*.cert_pem, count.index)
     me_key     = element(tls_private_key.workers.*.private_key_pem, count.index)
@@ -22,11 +40,11 @@ data "cloudinit_config" "workers" {
     })
   }
 
-  #docker
-  part {
-    content_type = "text/x-shellscript"
-    content      = file("${path.module}/templates/shared/docker.sh")
-  }
+  # #docker
+  # part {
+  #   content_type = "text/x-shellscript"
+  #   content      = file("${path.module}/templates/shared/docker.sh")
+  # }
 
   #consul
   part {
@@ -101,7 +119,7 @@ data "cloudinit_config" "workers" {
 resource "aws_instance" "workers" {
   count = var.workers
 
-  ami           = data.aws_ami.ubuntu.id
+  ami           = data.hcp_packer_image.demostack.cloud_image_id
   instance_type = var.instance_type_worker
   key_name      = aws_key_pair.demostack.id
 

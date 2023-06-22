@@ -1,6 +1,3 @@
-////////////////////// Module //////////////////////////
-
-
 
 output "workers" {
   value = aws_route53_record.workers.*.fqdn
@@ -43,4 +40,19 @@ output "vault_token" {
 
 output "consul_token" {
   value = nonsensitive(hcp_consul_cluster_root_token.root.secret_id)
+}
+
+output "XX_boundary_config" {
+  value = <<EOF
+
+config_boundary_address  =   "${hcp_boundary_cluster.hcp_demostack.cluster_url}"
+config_boundary_auth_method_id = ""
+config_boundary_username       = "admin"
+config_boundary_password       = "Welcome1"
+
+config_vault_address    = "${hcp_vault_cluster.hcp_demostack.vault_public_endpoint_url}"
+config_vault_token   = "${nonsensitive(hcp_vault_cluster_admin_token.root.token)}"
+config_vault_namespace = "boundary"
+
+EOF
 }

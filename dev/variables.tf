@@ -208,7 +208,3 @@ variable "hcp_consul_token" {
   default     = ""
 }
 
-variable "project_id" {
-  description = "the project you want to create resources in"
-  default     = ""
-}

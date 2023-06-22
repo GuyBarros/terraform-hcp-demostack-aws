@@ -21,19 +21,7 @@ source /etc/profile.d/ips.sh
 echo "--> Updating apt-cache"
 ssh-apt update
 
-echo "--> Adding trusted root CA"
-sudo tee /usr/local/share/ca-certificates/01-me.crt > /dev/null <<EOF
-${me_ca}
-EOF
-sudo update-ca-certificates &>/dev/null
 
-echo "--> Adding my certificates"
-sudo tee /etc/ssl/certs/me.crt > /dev/null <<EOF
-${me_cert}
-EOF
-sudo tee /etc/ssl/certs/me.key > /dev/null <<EOF
-${me_key}
-EOF
 
 echo "--> Setting iptables for bridge networking"
 echo 1 > /proc/sys/net/bridge/bridge-nf-call-arptables

@@ -14,7 +14,7 @@ provider "aws" {
 }
 
 provider "hcp" {
-  project_id = var.project_id
+  
 }
 
 

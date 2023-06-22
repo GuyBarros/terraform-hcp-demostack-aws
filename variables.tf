@@ -181,3 +181,15 @@ variable "documentdb_master__password" {
   description = "Password that will be used to create the AWS Postgres instance"
   default     = "YourPwdShouldBeLongAndSecure!"
 }
+
+variable "packer_bucket_name" {
+  type        = string
+  default     = "demostack-base-image"
+  description = "Which HCP Packer bucket should we pull our AMI from?"
+}
+
+variable "packer_channel" {
+  type        = string
+  default     = "latest"
+  description = "Which HCP Packer channel should we use for our AMI?"
+}
