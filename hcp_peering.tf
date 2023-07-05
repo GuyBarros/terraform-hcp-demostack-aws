@@ -1,5 +1,5 @@
 resource "hcp_hvn" "demostack" {
-  hvn_id         = var.hcp_hvn_id
+  hvn_id         = var.namespace
   cloud_provider = "aws"
   region         = var.region
   cidr_block     = "172.25.16.0/20"
@@ -8,7 +8,7 @@ resource "hcp_hvn" "demostack" {
 
 // Create a Network peering between the HVN and the AWS VPC
 resource "hcp_aws_network_peering" "demostack_peering" {
-  peering_id      = "dev"
+  peering_id      = "${var.namespace}"
   hvn_id          = hcp_hvn.demostack.hvn_id
   peer_vpc_id     = aws_vpc.demostack.id
   peer_account_id = aws_vpc.demostack.owner_id
@@ -20,7 +20,7 @@ resource "hcp_aws_network_peering" "demostack_peering" {
 
 resource "hcp_hvn_route" "main-to-dev" {
   hvn_link         = hcp_hvn.demostack.self_link
-  hvn_route_id     = "demostack-to-dev"
+  hvn_route_id     = "${var.namespace}-to-dev"
   destination_cidr = var.vpc_cidr_block
   target_link      = hcp_aws_network_peering.demostack_peering.self_link
 }
@@ -31,7 +31,7 @@ resource "aws_vpc_peering_connection_accepter" "demostack" {
   tags = merge(local.common_tags, {
     Purpose  = "demostack",
     Function = "hcp-peer"
-    Name     = "demostack-hcp-peer",
+    Name     = "${var.namespace}-hcp-peer",
     }
   )
 

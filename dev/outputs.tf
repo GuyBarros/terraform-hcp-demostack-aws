@@ -57,5 +57,8 @@ config_vault_address    = "${module.primarycluster.vault_address}"
 config_vault_token   = "${module.primarycluster.vault_token}"
 config_vault_namespace = "boundary"
 
+config_nomad_address = "${module.primarycluster.nomad_ui}"
+config_nomad_token = ""
+
 EOF
 }

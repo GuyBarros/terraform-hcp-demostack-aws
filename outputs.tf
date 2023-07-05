@@ -45,6 +45,7 @@ output "consul_token" {
 output "XX_boundary_config" {
   value = <<EOF
 
+config_application_name = "${var.namespace}"
 config_boundary_address  =   "${hcp_boundary_cluster.hcp_demostack.cluster_url}"
 config_boundary_auth_method_id = ""
 config_boundary_username       = "admin"
@@ -54,5 +55,9 @@ config_vault_address    = "${hcp_vault_cluster.hcp_demostack.vault_public_endpoi
 config_vault_token   = "${nonsensitive(hcp_vault_cluster_admin_token.root.token)}"
 config_vault_namespace = "boundary"
 
+config_nomad_address = "https://${aws_route53_record.nomad.fqdn}:4646"
+config_nomad_token = ""
+
 EOF
 }
+

@@ -143,7 +143,7 @@ resource "aws_instance" "workers" {
   }
 
   tags = {
-    Purpose  = "demostack",
+    Purpose  = var.namespace,
     Function = "worker",
     Name     = "demostack-worker-${count.index}", #"
   }
