@@ -1,0 +1,34 @@
+
+variable "eks_instance_count" {
+  type    = string
+  default = "1"
+}
+
+variable "eks_region" {
+  default     = "eu-west-2"
+  description = "AWS region"
+}
+
+module "cluster_1" {
+  # I'd have to remove all the provider from the modules, not today
+  # for_each = toset(var.cluster_names)
+  source = "./eks_dc_setup"
+
+
+  instance_count = var.eks_instance_count
+  region         = var.eks_region
+  cluster_name   = var.namespace
+  # cluster_name   = var.cluster_names
+  # cluster_name   = each.key
+}
+
+
+output "eks_region" {
+  description = "AWS region"
+  value       = var.eks_region
+}
+
+output "cluster_name_cluster1" {
+  description = "Kubernetes Cluster Name"
+  value       = module.cluster_1.cluster_name
+}

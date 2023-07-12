@@ -92,7 +92,7 @@ resource "random_pet" "animal" {
   separator  = "-"
 }
 
-
+/////// Vault /////////
 resource "consul_service" "vault" {
   depends_on = [hcp_consul_cluster.hcp_demostack, hcp_vault_cluster.hcp_demostack]
   name       = "vault"
@@ -119,6 +119,35 @@ resource "consul_node" "vault" {
   # address = hcp_vault_cluster.hcp_demostack.vault_public_endpoint_url
   address = replace(hcp_vault_cluster.hcp_demostack.vault_private_endpoint_url, ":8200", "")
 }
+/////// Boundary /////////
+resource "consul_service" "boundary" {
+  depends_on = [hcp_consul_cluster.hcp_demostack, hcp_boundary_cluster.hcp_demostack]
+  name       = "boundary"
+  node       = consul_node.boundary.name
+  port       = 443
+  tags       = ["hcp", "boundary"]
+  check {
+    check_id                          = "boundary_health_check"
+    name                              = "hcp boundary health check"
+    status                            = "passing"
+    http                              = "${hcp_boundary_cluster.hcp_demostack.cluster_url}"
+    method                            = "GET"
+    interval                          = "15s"
+    timeout                           = "10s"
+    deregister_critical_service_after = "30s"
+
+  }
+}
+
+
+resource "consul_node" "boundary" {
+  depends_on = [hcp_consul_cluster.hcp_demostack, hcp_boundary_cluster.hcp_demostack]
+  name       = "compute-boundary"
+  # address = hcp_vault_cluster.hcp_demostack.vault_public_endpoint_url
+  address =   hcp_boundary_cluster.hcp_demostack.cluster_url
+}
+
+
 resource "hcp_consul_cluster_root_token" "root" {
   depends_on = [time_sleep.wait_30_seconds]
   cluster_id = "${var.namespace}-consul"

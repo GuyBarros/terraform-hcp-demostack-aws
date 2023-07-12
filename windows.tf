@@ -40,7 +40,7 @@ resource "aws_instance" "windows" {
 
   tags = merge(local.common_tags ,{
    Purpose        = var.namespace ,
-   function       = "Windows"
+   Function       = "Windows"
    Name            = "${var.namespace}-Windows" ,
    }
   )
