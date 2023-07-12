@@ -60,4 +60,3 @@ config_nomad_token = ""
 
 EOF
 }
-

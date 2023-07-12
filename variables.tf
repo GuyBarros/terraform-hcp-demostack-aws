@@ -193,3 +193,12 @@ variable "packer_channel" {
   default     = "latest"
   description = "Which HCP Packer channel should we use for our AMI?"
 }
+
+variable "hcp_boundary_cluster_tier"{
+  description = "the HCP Boundary Cluster tier that you  want to use"
+  default     = "Standard"
+  validation {
+    condition     = contains(["Standard", "Plus"], var.hcp_boundary_cluster_tier)
+    error_message = "Valid values for var: hcp_boundary_cluster_tier are (Standard, Plus)."
+  } 
+}
