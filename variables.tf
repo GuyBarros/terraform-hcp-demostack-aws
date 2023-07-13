@@ -196,9 +196,9 @@ variable "packer_channel" {
 
 variable "hcp_boundary_cluster_tier"{
   description = "the HCP Boundary Cluster tier that you  want to use"
-  default     = "Standard"
+  default     = "PLUS"
   validation {
-    condition     = contains(["Standard", "Plus"], var.hcp_boundary_cluster_tier)
+    condition     = contains(["Standard", "Plus","STANDARD","PLUS"], var.hcp_boundary_cluster_tier)
     error_message = "Valid values for var: hcp_boundary_cluster_tier are (Standard, Plus)."
   } 
 }
