@@ -119,7 +119,8 @@ data "cloudinit_config" "workers" {
 resource "aws_instance" "workers" {
   count = var.workers
 
-  ami           = data.hcp_packer_image.demostack.cloud_image_id
+  # ami           = data.hcp_packer_image.demostack.cloud_image_id
+  ami           = aws_ami.ubuntu
   instance_type = var.instance_type_worker
   key_name      = aws_key_pair.demostack.id
 
