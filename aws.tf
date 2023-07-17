@@ -4,22 +4,22 @@ data "aws_route53_zone" "fdqn" {
 }
 
 
-# data "aws_ami" "ubuntu" {
-#   most_recent = true
-#   filter {
-#     name = "name"
-#     # values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
-#     # values = ["ubuntu/images/*ubuntu-hirsute-21.04-amd64-server-*"]
-#     values = ["ubuntu/images/*ubuntu-jammy-22.04-amd64-server-*"]
-#   }
+ data "aws_ami" "ubuntu" {
+   most_recent = true
+   filter {
+     name = "name"
+     # values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
+     # values = ["ubuntu/images/*ubuntu-hirsute-21.04-amd64-server-*"]
+     values = ["ubuntu/images/*ubuntu-jammy-22.04-amd64-server-*"]
+   }
 
-#   filter {
-#     name   = "virtualization-type"
-#     values = ["hvm"]
-#   }
+   filter {
+     name   = "virtualization-type"
+     values = ["hvm"]
+   }
 
-#   owners = ["099720109477"] # Canonical
-# }
+   owners = ["099720109477"] # Canonical
+ }
 
 resource "aws_vpc" "demostack" {
   cidr_block           = var.vpc_cidr_block
