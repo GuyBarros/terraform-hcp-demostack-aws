@@ -99,7 +99,7 @@ resource "aws_eks_node_group" "demostack" {
   cluster_name    = aws_eks_cluster.demostack.name
   node_group_name = "${var.namespace}-node_group"
   node_role_arn   = aws_iam_role.node_group.arn
-  subnet_ids      = var.subnet_ids[*]
+  subnet_ids      = aws_subnet.demostack[*].id
   scaling_config {
     desired_size = 1
     max_size     = 2
