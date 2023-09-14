@@ -40,11 +40,11 @@ data "cloudinit_config" "workers" {
     })
   }
 
-  # #docker
-  # part {
-  #   content_type = "text/x-shellscript"
-  #   content      = file("${path.module}/templates/shared/docker.sh")
-  # }
+   #docker
+   part {
+     content_type = "text/x-shellscript"
+     content      = file("${path.module}/templates/shared/docker.sh")
+   }
 
   #consul
   part {
