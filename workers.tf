@@ -21,6 +21,11 @@ data "cloudinit_config" "workers" {
   #   public_key = var.public_key
   #   })
   # }
+   #docker
+   part {
+     content_type = "text/x-shellscript"
+     content      = file("${path.module}/templates/shared/docker.sh")
+   }
     #hashicorp
   part {
     content_type = "text/x-shellscript"
@@ -40,11 +45,7 @@ data "cloudinit_config" "workers" {
     })
   }
 
-   #docker
-   part {
-     content_type = "text/x-shellscript"
-     content      = file("${path.module}/templates/shared/docker.sh")
-   }
+  
 
   #consul
   part {

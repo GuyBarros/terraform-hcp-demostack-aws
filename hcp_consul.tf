@@ -40,6 +40,13 @@ service_prefix "" {
   policy = "write"
 }
 
+namespace_prefix ""{
+  acl = "write"
+  service_prefix "" {
+  policy = "write"
+}
+}
+
 acl = "write"
 
 operator = "write"
