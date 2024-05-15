@@ -4,16 +4,16 @@ data "aws_ami" "windows" {
 
   filter {
     name   = "name"
-    values = ["Windows_Server-2019-English-Full-Base-*"]
+    # values = ["Windows_Server-2019-English-Full-Base-*"]
+     values = ["Windows_Server-2016-English-Full-Base-*"]
   }
 
   filter {
     name   = "virtualization-type"
     values = ["hvm"]
   }
-
-  owners = ["801119661308"] # Microsoft
-
+  # owners = ["801119661308"] # Microsoft
+owners = ["801119661308"] # Amazon
 }
 
 resource "aws_instance" "windows" {
@@ -25,7 +25,7 @@ resource "aws_instance" "windows" {
   subnet_id              = aws_subnet.demostack.0.id
   iam_instance_profile   = aws_iam_instance_profile.consul-join.name
   vpc_security_group_ids = [aws_security_group.demostack.id]
-
+  monitoring = true
 
   root_block_device {
     volume_size           = "240"

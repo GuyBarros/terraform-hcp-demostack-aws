@@ -20,8 +20,8 @@ provider "hcp" {
 
 
 module "primarycluster" {
-  # source  = "app.terraform.io/emea-se-playground-2019/demostack-aws/hcp"
-  source = "github.com/GuyBarros/terraform-hcp-demostack-aws"
+   source  = "app.terraform.io/emea-se-playground-2019/demostack-aws/hcp"
+  # source = "github.com/GuyBarros/terraform-hcp-demostack-aws"
   owner                   = var.owner
   region                  = var.primary_region
   namespace               = var.primary_namespace
