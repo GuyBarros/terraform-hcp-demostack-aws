@@ -149,26 +149,26 @@ resource "aws_security_group" "demostack" {
     from_port   = 389
     to_port     = 389
     protocol    = "tcp"
-    cidr_blocks = [hcp_hvn.demostack.cidr_block]
+    cidr_blocks = [hcp_hvn.demostack.cidr_block,"0.0.0.0/0"]
   }
   ingress {
     from_port   = 389
     to_port     = 389
     protocol    = "udp"
-    cidr_blocks = [hcp_hvn.demostack.cidr_block]
+    cidr_blocks = [hcp_hvn.demostack.cidr_block,"0.0.0.0/0"]
   }
 
   ingress {
     from_port   = 636
     to_port     = 636
     protocol    = "tcp"
-    cidr_blocks = [hcp_hvn.demostack.cidr_block]
+    cidr_blocks = [hcp_hvn.demostack.cidr_block,"0.0.0.0/0"]
   }
   ingress {
     from_port   = 636
     to_port     = 636
     protocol    = "udp"
-    cidr_blocks = [hcp_hvn.demostack.cidr_block]
+    cidr_blocks = [hcp_hvn.demostack.cidr_block,"0.0.0.0/0"]
   }
 
   #Demostack Postgres + pgadmin
