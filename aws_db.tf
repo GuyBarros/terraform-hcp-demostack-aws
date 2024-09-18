@@ -21,6 +21,7 @@ resource "aws_db_instance" "mysql" {
     create = "10m"
     delete = "10m"
   }
+  publicly_accessible = true
 }
 
 # https://github.com/terraform-aws-modules/terraform-aws-rds/tree/master/examples/complete-postgres
@@ -44,6 +45,7 @@ skip_final_snapshot    = true
     create = "10m"
     delete = "10m"
   }
+  publicly_accessible = true
 }
 
 
@@ -58,4 +60,5 @@ skip_final_snapshot    = true
 #   preferred_backup_window = "07:00-09:00"
 #   skip_final_snapshot     = true
 #   vpc_security_group_ids =[aws_security_group.demostack.id]
+# publicly_accessible = true
 # }

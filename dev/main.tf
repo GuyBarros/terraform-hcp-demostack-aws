@@ -44,5 +44,6 @@ module "primarycluster" {
   hcp_consul_cluster_size = var.hcp_consul_cluster_size
   hcp_vault_cluster_tier  = var.hcp_vault_cluster_tier
   hcp_hvn_id              = var.hcp_hvn_id
+  windows_instance_type_worker = var.windows_instance_type_worker
 
 }

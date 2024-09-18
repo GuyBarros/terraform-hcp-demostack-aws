@@ -54,8 +54,11 @@ config_boundary_password       = "Welcome1"
 config_vault_address    = "${hcp_vault_cluster.hcp_demostack.vault_public_endpoint_url}"
 config_vault_token   = "${nonsensitive(hcp_vault_cluster_admin_token.root.token)}"
 config_vault_namespace = "boundary"
+config_consul_address = "${hcp_consul_cluster.hcp_demostack.consul_public_endpoint_url}"
+config_consul_token = "${nonsensitive(hcp_consul_cluster_root_token.root.secret_id)}"
 config_nomad_address = "https://${aws_route53_record.nomad.fqdn}:4646"
 config_nomad_token = ""
+
 
 EOF
 }

@@ -11,16 +11,16 @@ data "cloudinit_config" "workers" {
   base64_encode = true
 
   # #base
-  # part {
-  #   content_type = "text/x-shellscript"
-  #   content      = templatefile("${path.module}/templates/shared/base.sh",{
-  #     enterprise = var.enterprise
-  #    me_ca     = tls_self_signed_cert.root.cert_pem
-  #   me_cert    = element(tls_locally_signed_cert.workers.*.cert_pem, count.index)
-  #   me_key     = element(tls_private_key.workers.*.private_key_pem, count.index)
-  #   public_key = var.public_key
-  #   })
-  # }
+  part {
+    content_type = "text/x-shellscript"
+    content      = templatefile("${path.module}/templates/shared/base.sh",{
+      enterprise = var.enterprise
+     me_ca     = tls_self_signed_cert.root.cert_pem
+    me_cert    = element(tls_locally_signed_cert.workers.*.cert_pem, count.index)
+    me_key     = element(tls_private_key.workers.*.private_key_pem, count.index)
+    public_key = var.public_key
+    })
+  }
    #docker
    part {
      content_type = "text/x-shellscript"
@@ -120,9 +120,12 @@ data "cloudinit_config" "workers" {
 resource "aws_instance" "workers" {
   count = var.workers
 
-  ami           = data.hcp_packer_artifact.demostack.external_identifier
- # ami           = aws_ami.ubuntu
-  instance_type = var.instance_type_worker
+  # ami           = data.hcp_packer_artifact.demostack.external_identifier
+   ami           = data.aws_ami.ubuntu.id
+  # ami = "ami-0a5fc7f536cbd4467"
+   # ami           = "ami-0a5fc7f536cbd4467"  # Ubuntu 20.04 ARM AMI ID for eu-west-2
+  # instance_type = "t4g.xlarge"              # ARM-based instance type
+   instance_type = var.instance_type_worker
   key_name      = aws_key_pair.demostack.id
 
   monitoring = true

@@ -3,6 +3,13 @@ set -x
 
 echo "==> Base"
 
+echo "==> getting the aws metadata token"
+export TOKEN=$(curl -H "X-aws-ec2-metadata-token: $TOKEN" -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
+
+echo "==> check token was set"
+echo $TOKEN
+
+
 echo "==> libc6 issue workaround"
 echo 'libc6 libraries/restart-without-asking boolean true' | sudo debconf-set-selections
 
@@ -103,17 +110,6 @@ fi
 #  curl -L https://getenvoy.io/cli | sudo bash -s -- -b /usr/local/bin
 #  getenvoy run standard:1.16.0 -- --version
 #  sudo cp ~/.getenvoy/builds/standard/1.16.0/linux_glibc/bin/envoy /usr/bin/
-
-# envoy --version
-echo "---> Install latest Envoy"
-sudo apt update
-sudo apt install apt-transport-https gnupg2 curl lsb-release
-curl -sL 'https://deb.dl.getenvoy.io/public/gpg.8115BA8E629CC074.key' | sudo gpg --dearmor -o /usr/share/keyrings/getenvoy-keyring.gpg
-Verify the keyring - this should yield "OK"
-echo a077cb587a1b622e03aa4bf2f3689de14658a9497a9af2c427bba5f4cc3c4723 /usr/share/keyrings/getenvoy-keyring.gpg | sha256sum --check
-echo "deb [arch=amd64 signed-by=/usr/share/keyrings/getenvoy-keyring.gpg] https://deb.dl.getenvoy.io/public/deb/ubuntu $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/getenvoy.list
-sudo apt update
-sudo apt install -y getenvoy-envoy
 
 
 echo "==> Base is done!"

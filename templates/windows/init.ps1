@@ -42,5 +42,6 @@ Remove-Item -Path $destinationPath
 # Confirm completion
 Write-Output "Boundary Desktop downloaded and extracted to Desktop successfully."
 
+git clone https://github.com/GuyBarros/ad-lab C:\ad-lab
 
 </powershell>
