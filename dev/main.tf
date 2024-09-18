@@ -20,8 +20,8 @@ provider "hcp" {
 
 
 module "primarycluster" {
-  # source  = "app.terraform.io/emea-se-playground-2019/demostack-aws/hcp"
-  source = "github.com/GuyBarros/terraform-hcp-demostack-aws"
+   source  = "app.terraform.io/emea-se-playground-2019/demostack-aws/hcp"
+  # source = "github.com/GuyBarros/terraform-hcp-demostack-aws"
   owner                   = var.owner
   region                  = var.primary_region
   namespace               = var.primary_namespace
@@ -44,5 +44,6 @@ module "primarycluster" {
   hcp_consul_cluster_size = var.hcp_consul_cluster_size
   hcp_vault_cluster_tier  = var.hcp_vault_cluster_tier
   hcp_hvn_id              = var.hcp_hvn_id
+  windows_instance_type_worker = var.windows_instance_type_worker
 
 }

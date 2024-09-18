@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 
 
+echo "==> getting the aws metadata token"
+export TOKEN=$(curl -H "X-aws-ec2-metadata-token: $TOKEN" -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
+
+echo "==> check token was set"
+echo $TOKEN
+
+
 echo "--> Writing configuration"
 sudo mkdir -p /mnt/consul
 sudo mkdir -p /etc/consul.d
@@ -21,9 +28,9 @@ EOF
 
 sudo tee /etc/consul.d/additional_config.json > /dev/null <<EOF
 {
-"advertise_addr": "$(curl -s http://169.254.169.254/latest/meta-data/local-ipv4)",
-"advertise_addr_wan": "$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)",
-"client_addr": "$(curl -s http://169.254.169.254/latest/meta-data/local-ipv4) 127.0.0.1",
+"advertise_addr": "$(curl -H "X-aws-ec2-metadata-token: $TOKEN" -s http://169.254.169.254/latest/meta-data/local-ipv4)",
+"advertise_addr_wan": "$(curl -H "X-aws-ec2-metadata-token: $TOKEN" -s http://169.254.169.254/latest/meta-data/public-ipv4)",
+"client_addr": "$(curl -H "X-aws-ec2-metadata-token: $TOKEN" -s http://169.254.169.254/latest/meta-data/local-ipv4) 127.0.0.1",
  "node_name": "${node_name}",
 "ports": {
     "http": 8500,

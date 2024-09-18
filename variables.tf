@@ -99,9 +99,12 @@ variable "nomadlicense" {
 
 variable "instance_type_worker" {
   description = "The type(size) of data workers (consul, nomad, etc)."
+  default     = "t4g.xlarge"
+}
+variable "windows_instance_type_worker" {
+  description = "The type(size) of data worker (consul, nomad, etc)."
   default     = "t3.medium"
 }
-
 variable "run_nomad_jobs" {
   default = "0"
 }

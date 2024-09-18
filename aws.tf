@@ -8,9 +8,8 @@ data "aws_route53_zone" "fdqn" {
    most_recent = true
    filter {
      name = "name"
-     # values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
-     # values = ["ubuntu/images/*ubuntu-hirsute-21.04-amd64-server-*"]
-     values = ["ubuntu/images/*ubuntu-jammy-22.04-amd64-server-*"]
+     # values = ["ubuntu/images/*ubuntu-jammy-22.04-amd64-server-*"]
+     values = ["ubuntu/images/*ubuntu-jammy-22.04-arm64-server-*"]
    }
 
    filter {
@@ -149,26 +148,26 @@ resource "aws_security_group" "demostack" {
     from_port   = 389
     to_port     = 389
     protocol    = "tcp"
-    cidr_blocks = [hcp_hvn.demostack.cidr_block]
+    cidr_blocks = [hcp_hvn.demostack.cidr_block,"0.0.0.0/0"]
   }
   ingress {
     from_port   = 389
     to_port     = 389
     protocol    = "udp"
-    cidr_blocks = [hcp_hvn.demostack.cidr_block]
+    cidr_blocks = [hcp_hvn.demostack.cidr_block,"0.0.0.0/0"]
   }
 
   ingress {
     from_port   = 636
     to_port     = 636
     protocol    = "tcp"
-    cidr_blocks = [hcp_hvn.demostack.cidr_block]
+    cidr_blocks = [hcp_hvn.demostack.cidr_block,"0.0.0.0/0"]
   }
   ingress {
     from_port   = 636
     to_port     = 636
     protocol    = "udp"
-    cidr_blocks = [hcp_hvn.demostack.cidr_block]
+    cidr_blocks = [hcp_hvn.demostack.cidr_block,"0.0.0.0/0"]
   }
 
   #Demostack Postgres + pgadmin
