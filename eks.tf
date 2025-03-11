@@ -1,18 +1,6 @@
 
-/*module "eks" {
-  count = var.create_eks_cluster ? 1 : 0
-  source  = "./modules/eks"
-
-  subnet_ids = aws_subnet.demostack[*].id
-
-}
-*/
-
-#
-#IAM Stuff for EKS cluster
-#
-resource "aws_iam_role" "eks_role" {
-  name = "${var.namespace}-eks-cluster-eks_role"
+resource "aws_iam_role" "eks" {
+  name = "${var.namespace}-eks"
 
   assume_role_policy = <<POLICY
 {
@@ -30,91 +18,89 @@ resource "aws_iam_role" "eks_role" {
 POLICY
 }
 
-resource "aws_iam_role_policy_attachment" "eks_role-AmazonEKSClusterPolicy" {
+resource "aws_iam_role_policy_attachment" "eks-AmazonEKSClusterPolicy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
-  role       = aws_iam_role.eks_role.name
+  role       = aws_iam_role.eks.name
 }
 
-resource "aws_iam_role_policy_attachment" "eks_role-AmazonEKSServicePolicy" {
+resource "aws_iam_role_policy_attachment" "eks-AmazonEKSServicePolicy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSServicePolicy"
-  role       = aws_iam_role.eks_role.name
+  role       = aws_iam_role.eks.name
 }
 
-#
-#EKS cluster
-#
-resource "aws_eks_cluster" "demostack" {
-  name     = "${var.namespace}-eks-cluster"
-  role_arn = aws_iam_role.eks_role.arn
+
+
+resource "aws_eks_cluster" "eks" {
+  name     = "${var.namespace}-eks"
+  role_arn = aws_iam_role.eks.arn
 
   vpc_config {
-    subnet_ids = aws_subnet.demostack[*].id
+    security_group_ids = [aws_security_group.demostack.id]
+    subnet_ids         = aws_subnet.demostack.*.id
   }
 
-  # Ensure that IAM Role permissions are created before and deleted after EKS Cluster handling.
-  # Otherwise, EKS will not be able to properly delete EKS managed EC2 infrastructure such as Security Groups.
   depends_on = [
-    aws_iam_role_policy_attachment.eks_role-AmazonEKSClusterPolicy,
-    aws_iam_role_policy_attachment.eks_role-AmazonEKSServicePolicy,
+    aws_iam_role_policy_attachment.eks-AmazonEKSClusterPolicy,
+    aws_iam_role_policy_attachment.eks-AmazonEKSServicePolicy,
   ]
 }
 
+# EKS Worker Nodes Resources
+#  * IAM role allowing Kubernetes actions to access other AWS services
+#  * EKS Node Group to launch worker nodes
 #
-#IAM Role for the Node Group
-#
-resource "aws_iam_role" "node_group" {
-  name = "${var.namespace}-node_group_role"
 
-  assume_role_policy = jsonencode({
-    Statement = [{
-      Action = "sts:AssumeRole"
-      Effect = "Allow"
-      Principal = {
-        Service = "ec2.amazonaws.com"
-      }
-    }]
-    Version = "2012-10-17"
-  })
+resource "aws_iam_role" "eks-node" {
+  name = "${var.namespace}-eks-nodes"
+
+  assume_role_policy = <<POLICY
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "ec2.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+POLICY
 }
 
-resource "aws_iam_role_policy_attachment" "example-AmazonEKSWorkerNodePolicy" {
+resource "aws_iam_role_policy_attachment" "eks-node-AmazonEKSWorkerNodePolicy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
-  role       = aws_iam_role.node_group.name
+  role       = aws_iam_role.eks-node.name
 }
 
-resource "aws_iam_role_policy_attachment" "example-AmazonEKS_CNI_Policy" {
+resource "aws_iam_role_policy_attachment" "eks-node-AmazonEKS_CNI_Policy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
-  role       = aws_iam_role.node_group.name
+  role       = aws_iam_role.eks-node.name
 }
 
-resource "aws_iam_role_policy_attachment" "example-AmazonEC2ContainerRegistryReadOnly" {
+resource "aws_iam_role_policy_attachment" "eks-node-AmazonEC2ContainerRegistryReadOnly" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
-  role       = aws_iam_role.node_group.name
+  role       = aws_iam_role.eks-node.name
 }
 
-#
-#EKS Node Group
-#
-resource "aws_eks_node_group" "demostack" {
-  cluster_name    = aws_eks_cluster.demostack.name
-  node_group_name = "${var.namespace}-node_group"
-  node_role_arn   = aws_iam_role.node_group.arn
-  subnet_ids      = aws_subnet.demostack[*].id
+resource "aws_eks_node_group" "eks-node" {
+  cluster_name    = aws_eks_cluster.eks.name
+  node_group_name = "demostack"
+  node_role_arn   = aws_iam_role.eks-node.arn
+  subnet_ids      = aws_subnet.demostack.*.id
+  instance_types  =  [var.instance_type_worker]
+  ami_type       = "AL2_ARM_64"
+
   scaling_config {
-    desired_size = 1
-    max_size     = 2
-    min_size     = 1
+    desired_size = 3
+    max_size     = 5
+    min_size     = 3
   }
 
-  update_config {
-    max_unavailable = 1
-  }
-
-  # Ensure that IAM Role permissions are created before and deleted after EKS Node Group handling.
-  # Otherwise, EKS will not be able to properly delete EC2 Instances and Elastic Network Interfaces.
   depends_on = [
-    aws_iam_role_policy_attachment.example-AmazonEKSWorkerNodePolicy,
-    aws_iam_role_policy_attachment.example-AmazonEKS_CNI_Policy,
-    aws_iam_role_policy_attachment.example-AmazonEC2ContainerRegistryReadOnly,
+    aws_iam_role_policy_attachment.eks-node-AmazonEKSWorkerNodePolicy,
+    aws_iam_role_policy_attachment.eks-node-AmazonEKS_CNI_Policy,
+    aws_iam_role_policy_attachment.eks-node-AmazonEC2ContainerRegistryReadOnly,
   ]
 }

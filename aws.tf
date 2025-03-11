@@ -207,21 +207,13 @@ resource "aws_security_group" "demostack" {
     protocol    = "tcp"
     cidr_blocks = [hcp_hvn.demostack.cidr_block,"0.0.0.0/0"]
   }
-  #More nomad ports
+  #More nomad & Boundary ports
   ingress {
     from_port   = 20000
-    to_port     = 29999
+    to_port     = 65535
     protocol    = "tcp"
     cidr_blocks = [hcp_hvn.demostack.cidr_block,"0.0.0.0/0"]
   }
-
-  ingress {
-    from_port   = 30000
-    to_port     = 39999
-    protocol    = "tcp"
-    cidr_blocks = [hcp_hvn.demostack.cidr_block,"0.0.0.0/0"]
-  }
-
 
   ingress {
     from_port   = 1521
@@ -290,7 +282,6 @@ resource "aws_security_group" "demostack" {
     protocol    = "tcp"
     cidr_blocks = [hcp_hvn.demostack.cidr_block,"0.0.0.0/0"]
   }
-
   
   ingress {
     from_port   = 443
