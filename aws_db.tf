@@ -8,12 +8,12 @@ resource "aws_db_instance" "mysql" {
   identifier           = "${var.namespace}-mysql"
   allocated_storage    = 10
   engine               = "mysql"
-  engine_version       = "5.7"
+  engine_version       = "8.0"
   instance_class       = "db.t3.micro"
   db_name                 = var.mysql_db_name
   username             = var.mysql_username
   password             = var.mysql_password
-  parameter_group_name = "default.mysql5.7"
+  parameter_group_name = "default.mysql8.0"
   db_subnet_group_name = aws_db_subnet_group.demostack.id
   vpc_security_group_ids =[aws_security_group.demostack.id]
   skip_final_snapshot  = true
@@ -28,7 +28,7 @@ resource "aws_db_instance" "mysql" {
 resource "aws_db_instance" "postgres" {
 identifier           = "${var.namespace}-postgres"
 engine               = "postgres"
-engine_version         = "15.6"
+engine_version         = "17"
 instance_class         = "db.t3.micro"
 
  allocated_storage      = 5

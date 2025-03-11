@@ -1,0 +1,151 @@
+data "tfe_organization" "playground" {
+  name = "emea-se-playground-2019"
+}
+
+
+data "tfe_variable_set" "varset" {
+  name         = "com_showcase"
+  organization = data.tfe_organization.playground.name
+}
+
+resource "tfe_variable" "boundary_address" {
+  key             = "boundary_address"
+  value           = "${hcp_boundary_cluster.hcp_demostack.cluster_url}"
+  category        = "terraform"
+  description     = "HCP Boundary Address"
+  sensitive       = false
+  variable_set_id = data.tfe_variable_set.varset.id
+}
+
+resource "tfe_variable" "boundary_password" {
+  key             = "boundary_password"
+  value           = "Welcome1"
+  category        = "terraform"
+  description     = "HCP Boundary password"
+  sensitive       = true
+  variable_set_id = data.tfe_variable_set.varset.id
+}
+
+resource "tfe_variable" "boundary_username" {
+  key             = "boundary_username"
+  value           = "admin"
+  category        = "terraform"
+  description     = "HCP Boundary Username"
+  sensitive       = false
+  variable_set_id = data.tfe_variable_set.varset.id
+}
+
+resource "tfe_variable" "consul_address" {
+  key             = "consul_address"
+  value           = "${hcp_consul_cluster.hcp_demostack.consul_public_endpoint_url}"
+  category        = "terraform"
+  description     = "HCP Consul Address"
+  sensitive       = false
+  variable_set_id = data.tfe_variable_set.varset.id
+}
+
+resource "tfe_variable" "consul_token" {
+  key             = "consul_token"
+  value           = "${hcp_consul_cluster_root_token.root.secret_id}"
+  category        = "terraform"
+  description     = "Consul Token"
+  sensitive       = true
+  variable_set_id = data.tfe_variable_set.varset.id
+}
+
+resource "tfe_variable" "nomad_address" {
+  key             = "nomad_address"
+  value           = "https://${aws_route53_record.nomad.fqdn}:4646"
+  category        = "terraform"
+  description     = "Self Hosted Nomad Address"
+  sensitive       = false
+  variable_set_id = data.tfe_variable_set.varset.id
+}
+
+resource "tfe_variable" "nomad_token" {
+  key             = "nomad_token"
+  value           = ""
+  category        = "terraform"
+  description     = "Self Hosted Nomad Token"
+  sensitive       = true
+  variable_set_id = data.tfe_variable_set.varset.id
+}
+
+
+resource "tfe_variable" "postgres_name" {
+  key             = "postgres_name"
+  value           = "postgres"
+  category        = "terraform"
+  description     = "RDS Postgress Address"
+  sensitive       = false
+  variable_set_id = data.tfe_variable_set.varset.id
+}
+
+resource "tfe_variable" "postgres_hostname" {
+  key             = "postgres_hostname"
+  value           = aws_db_instance.postgres.address
+  category        = "terraform"
+  description     = "RDS Postgress Address"
+  sensitive       = false
+  variable_set_id = data.tfe_variable_set.varset.id
+}
+
+resource "tfe_variable" "postgres_username" {
+  key             = "postgres_username"
+  value           = var.postgres_username
+  category        = "terraform"
+  description     = "RDS Postgress username"
+  sensitive       = true
+  variable_set_id = data.tfe_variable_set.varset.id
+}
+
+resource "tfe_variable" "postgres_password" {
+  key             = "postgres_password"
+  value           = var.postgres_password
+  category        = "terraform"
+  description     = "RDS Postgress password"
+  sensitive       = true
+  variable_set_id = data.tfe_variable_set.varset.id
+}
+
+resource "tfe_variable" "postgres_port" {
+  key             = "postgres_port"
+  value           = 5432
+  category        = "terraform"
+  description     = "RDS Postgress port"
+  sensitive       = false
+  variable_set_id = data.tfe_variable_set.varset.id
+}
+
+resource "tfe_variable" "vault_address" {
+  key             = "vault_address"
+  value           = "${hcp_vault_cluster.hcp_demostack.vault_public_endpoint_url}"
+  category        = "terraform"
+  description     = "HCP Vault Address"
+  sensitive       = false
+  variable_set_id = data.tfe_variable_set.varset.id
+}
+
+resource "tfe_variable" "vault_namespace" {
+  key             = "vault_namespace"
+  value           = "admin"
+  category        = "terraform"
+  description     = "HCP Vault namespace"
+  sensitive       = false
+  variable_set_id = data.tfe_variable_set.varset.id
+}
+
+resource "tfe_variable" "vault_token" {
+  key             = "vault_token"
+  value           = "${nonsensitive(hcp_vault_cluster_admin_token.root.token)}"
+  category        = "terraform"
+  description     = "HCP Vault token"
+  sensitive       = true
+  variable_set_id = data.tfe_variable_set.varset.id
+}
+
+# application_name = "${var.namespace}"
+# boundary_auth_method_id = ""
+# vault_address    = 
+# vault_token   = "${nonsensitive(hcp_vault_cluster_admin_token.root.token)}"
+# vault_namespace = "boundary"

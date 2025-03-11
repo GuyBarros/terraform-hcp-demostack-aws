@@ -11,7 +11,6 @@ output "fabio_lb" {
   value = "http://${aws_route53_record.fabio.fqdn}:9999"
 }
 
-
 output "nomad_ui" {
   value = "https://${aws_route53_record.nomad.fqdn}:4646"
 }
@@ -46,19 +45,18 @@ output "consul_token" {
 output "XX_boundary_config" {
   value = <<EOF
 
-config_application_name = "${var.namespace}"
-config_boundary_address  =   "${hcp_boundary_cluster.hcp_demostack.cluster_url}"
-config_boundary_auth_method_id = ""
-config_boundary_username       = "admin"
-config_boundary_password       = "Welcome1"
-config_vault_address    = "${hcp_vault_cluster.hcp_demostack.vault_public_endpoint_url}"
-config_vault_token   = "${nonsensitive(hcp_vault_cluster_admin_token.root.token)}"
-config_vault_namespace = "boundary"
-config_consul_address = "${hcp_consul_cluster.hcp_demostack.consul_public_endpoint_url}"
-config_consul_token = "${nonsensitive(hcp_consul_cluster_root_token.root.secret_id)}"
-config_nomad_address = "https://${aws_route53_record.nomad.fqdn}:4646"
-config_nomad_token = ""
-
+application_name = "${var.namespace}"
+boundary_address  =   "${hcp_boundary_cluster.hcp_demostack.cluster_url}"
+boundary_auth_method_id = ""
+boundary_username       = "admin"
+boundary_password       = "Welcome1"
+vault_address    = "${hcp_vault_cluster.hcp_demostack.vault_public_endpoint_url}"
+vault_token   = "${nonsensitive(hcp_vault_cluster_admin_token.root.token)}"
+vault_namespace = "boundary"
+consul_address = "${hcp_consul_cluster.hcp_demostack.consul_public_endpoint_url}"
+consul_token = "${nonsensitive(hcp_consul_cluster_root_token.root.secret_id)}"
+nomad_address = "https://${aws_route53_record.nomad.fqdn}:4646"
+nomad_token = ""
 
 EOF
 }
