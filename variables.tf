@@ -205,3 +205,16 @@ variable "hcp_boundary_cluster_tier"{
     error_message = "Valid values for var: hcp_boundary_cluster_tier are (Standard, Plus)."
   } 
 }
+
+variable "tfc_varset_name" {
+  description = "The name of the TFC variable set"
+  type        = string
+  default     = "com_showcase"
+}
+
+variable "tfc_organization_name" {
+  description = "The name of the TFC variable set"
+  type        = string
+  default     = "emea-se-playground-2019"
+}
+
